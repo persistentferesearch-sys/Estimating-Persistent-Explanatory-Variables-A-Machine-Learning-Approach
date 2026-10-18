@@ -1,5 +1,5 @@
-# Revisiting the Missing R&D-Patent Relation: Challenges and Solutions for Firm Fixed Effects Models
-The repository provides detailed examples and code that follow the paper *Revisiting the Missing R\&D-Patent Relation: Challenges and Solutions for Firm Fixed Effects Models*. 
+# Estimating Persistent Explanatory Variables: A Machine Learning Approach
+The repository provides detailed examples and code that follow the paper *Estimating Persistent Explanatory Variables: A Machine Learning Approach*. 
 
 In this set of code, we demonstrate how users can implement the following four ways to identify the potential bias from fixed effects regressions: 
   1. Linear regression and Poisson regression with and without firm FEs
