@@ -82,12 +82,6 @@ The Mata PRL fit also matched the **local official fit** across all 13 coefficie
 
 The commands, data preparation, and evidence are in [RDPatentComparison.md](RDPatentComparison.md). These results concern this recorded specification; changing the sample, variable order, indicator coding, selection rule, or folds may change the comparison.
 
-## Poisson outcomes and other options
 
-For an outcome that is a count rather than a linear-model outcome, see `help sparse_popoisson`. This Poisson command is a **development feature** with separate validation. `sparse_poipoisson` is an alias for it; neither command is interchangeable with the linear commands above.
-
-The package also includes an optional Python/DoubleML route using LassoCV. Because it uses a different selection method, its results are a sensitivity analysis rather than an official Stata plugin/BIC replication. Most readers can begin with the Stata and Mata routes without installing Python.
-
-For command options and postestimation, type `help sparse_poreg`, `help sparse_xporeg`, or `help sparse_popoisson` in Stata.
 
 This is an independent third-party package, not affiliated with or endorsed by StataCorp LLC. The package code is distributed under the MIT license.
