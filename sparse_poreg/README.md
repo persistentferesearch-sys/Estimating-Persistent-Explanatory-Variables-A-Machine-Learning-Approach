@@ -80,7 +80,7 @@ The package was also checked against the [paper’s public replication data](htt
 
 The Mata PRL fit also matched the **local official fit** across all 13 coefficients and the full covariance matrix to numerical precision. On that machine, Mata PRL took about 8 minutes and the local official fit about 6 hours. The Mata XPO fit matches all 13 coefficient and standard-error pairs **as printed in the published official log**. Because that log rounds the numbers, it does not establish full-precision XPO covariance equality, and it does not provide a comparable official XPO estimation timer.
 
-The commands, data preparation, and evidence are in [COMPARISON.md](COMPARISON.md). These results concern this recorded specification; changing the sample, variable order, indicator coding, selection rule, or folds may change the comparison.
+The commands, data preparation, and evidence are in [RDPatentComparison.md](RDPatentComparison.md). These results concern this recorded specification; changing the sample, variable order, indicator coding, selection rule, or folds may change the comparison.
 
 ## Poisson outcomes and other options
 
