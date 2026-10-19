@@ -6,6 +6,7 @@ In this set of code, we demonstrate how users can implement the following four w
   2. Within, Between, and Overall R-squared
   2. Adjusted Hausman-Taylor approach
   4. Post-regularization LASSO (PRL) and Double Machine Learning (DML) methods for both linear and Poisson regression
+  5. Sparse-Poreg folder with codes and examples for the Stata *Mata*-based commands implementing PRL and DML. 
 
 ## Data and Code Availability:
 We have prepared the following documents:
