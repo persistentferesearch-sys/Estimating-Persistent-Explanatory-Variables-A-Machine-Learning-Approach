@@ -4,15 +4,7 @@
 official Stata for manageable designs and a narrower sparse Mata engine for
 large absorbed-dummy sets.
 
-Current release: `0.8.4-rc14`. It retains the rc13 routing, Python/DoubleML,
-and certification baseline, and adds official-compatible omission of
-collinear PO variables of interest in the Mata backend.  Omitted coefficients
-and their covariance rows/columns are zero-filled, estimable coefficients are
-retained, and the names are saved in `e(varsofinterest_omitted)`.  The
-focused robust, one-way, two-way, public-example, and empirical ownership
-validations pass.  See `CERTIFICATION_20260715.md` for the rc13 manifest and
-documented frontiers.
-
+Current release: `0.8.4-rc14`. 
 This is an independent third-party package, not affiliated with or endorsed
 by StataCorp LLC. Stata is a registered trademark of StataCorp LLC. References
 to official commands describe compatibility testing; the MIT license covers
