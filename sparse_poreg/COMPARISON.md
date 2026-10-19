@@ -10,17 +10,17 @@ local x RDAT lnME RD_missing lnAge lnK2L TobinQ ROA Leverage ///
     CASHAT KZidx InstOwn oms_HHidx oms_HHidx_square
 ```
 
-| Route | Stata command (continued on next line) | RDAT coefficient | Cluster SE | Timing evidence |
+| Route | Stata command | RDAT coefficient | Cluster SE | Timing evidence |
 |---|---|---:|---:|---:|
-| [Published official PRL](../ReplicateLog_Results/REPLIC~4.SMC) ([table](../ReplicateLog_Results/PRL_LI~1.CSV)) | `poregress` with `controls(i.PERMCO i.fyear) vce(cluster PERMCO) selection(bic, gridminok) rseed(1103)` | 0.1986367 | 0.0181304 | 4,201 s (1 h 10 m 1 s; log window) |
-| Package official PRL | `sparse_poreg` with the same options plus `backend(official)` | 0.198636660737012 | 0.0181303830385999 | 21,739.120 s (6.04 h; local Stata timer) |
-| Package Mata PRL | `sparse_poreg` with `absorb(PERMCO fyear) vce(cluster PERMCO) selection(bic, gridminok) rseed(1103) backend(mata) strict(stata)` | 0.198636660737147 | 0.0181303830386044 | 477.897 s (7.97 min; local Stata timer) |
-| [Published official DML/XPO](../ReplicateLog_Results/REPLIC~1.SMC) ([table](../ReplicateLog_Results/DML_LI~1.CSV)) | `xporegress` with `controls(i.PERMCO i.fyear) vce(cluster PERMCO) xfolds(5) rseed(1103) selection(bic, gridminok)` | 0.2131053 | 0.0136054 | 12,986 s (3 h 36 m 26 s; log window) |
-| Package Mata DML/XPO | `sparse_xporeg` with `absorb(PERMCO fyear) vce(cluster PERMCO) xfolds(5) rseed(1103) selection(bic, gridminok) backend(mata) frontierok strict(stata)` | 0.213105298267939 | 0.0136053698613053 | 2,107.911 s (35.13 min; local Stata timer) |
+| [Published official PRL](../ReplicateLog_Results/REPLIC~4.SMC) ([table](../ReplicateLog_Results/PRL_LI~1.CSV)) | ``poregress `y' `x', controls(i.PERMCO i.fyear) vce(cluster PERMCO) selection(bic, gridminok) rseed(1103)`` | 0.1986367 | 0.0181304 | 4,201 s (1 h 10 m 1 s; log window) |
+| Package official PRL | ``sparse_poreg `y' `x', controls(i.PERMCO i.fyear) vce(cluster PERMCO) selection(bic, gridminok) rseed(1103) backend(official)`` | 0.198636660737012 | 0.0181303830385999 | 21,739.120 s (6.04 h; local Stata timer) |
+| Package Mata PRL | ``sparse_poreg `y' `x', absorb(PERMCO fyear) vce(cluster PERMCO) selection(bic, gridminok) rseed(1103) backend(mata) strict(stata)`` | 0.198636660737147 | 0.0181303830386044 | 477.897 s (7.97 min; local Stata timer) |
+| [Published official DML/XPO](../ReplicateLog_Results/REPLIC~1.SMC) ([table](../ReplicateLog_Results/DML_LI~1.CSV)) | ``xporegress `y' `x', controls(i.PERMCO i.fyear) vce(cluster PERMCO) xfolds(5) rseed(1103) selection(bic, gridminok)`` | 0.2131053 | 0.0136054 | 12,986 s (3 h 36 m 26 s; log window) |
+| Package Mata DML/XPO | ``sparse_xporeg `y' `x', absorb(PERMCO fyear) vce(cluster PERMCO) xfolds(5) rseed(1103) selection(bic, gridminok) backend(mata) frontierok strict(stata)`` | 0.213105298267939 | 0.0136053698613053 | 2,107.911 s (35.13 min; local Stata timer) |
 
 The published PRL log opened at 09:46:49 and closed at 10:56:50 on 7 February 2025; the published XPO log opened at 10:56:50 and closed at 14:33:16. The resulting 4,201-second and 12,986-second intervals are **log windows**, not estimation timers. They include any commands around estimation and possible idle time. The local package figures are Stata timer outputs from a different machine, so these columns should not be treated as a cross-machine speed benchmark.
 
-Each row's command begins with `` `y' `x', `` after the named command. The Mata PRL and XPO commands are copy-ready in [README.md](README.md) and [the Mata do-file](examples/github_rdpatent_mata_prl_xpo.do). All `x` variables are variables of interest; firm/year indicators are selection controls. The official backend delegates to Stata's `poregress`/`xporegress`. In clustered BIC PRL, `frontierok` is rejected by rc14; the completed PRL run did not use it. XPO requires that flag.
+With the data loaded and sorted and the y/x locals defined above, each table command is complete and copyable. All x variables are variables of interest; firm/year indicators are selection controls. The official backend delegates to Stata's poregress/xporegress. In clustered BIC PRL, frontierok is rejected by rc14; the completed PRL run did not use it. XPO requires that flag.
 
 **PRL parity:** the local official and Mata saved estimates have identical coefficient names/order. Across all 13 coefficients, maximum absolute difference is `1.35197408823728e-13`; across all entries of the 13-by-13 covariance matrix, `2.08904074594507e-15`. Both pass a `1e-10` threshold. The published official PRL result matches the displayed values. Mata PRL was 45.5 times faster on this machine.
 
