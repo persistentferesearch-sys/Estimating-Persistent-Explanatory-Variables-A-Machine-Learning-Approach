@@ -40,7 +40,7 @@ The supplied replication script specifies Stata 17 or later. Some models can tak
 
 ## Sample data construction
 
-`PERMCO` is a masked firm identifier. The following variable descriptions summarize the public data; see the paper and original data sources for further details.
+`PERMCO` is a masked firm identifier. The following variable descriptions summarize the data; see the paper and original data sources for further details.
   - `patent`: Number of patents (USPTO PatentsView)
   - `lnnpatent`: Logarithm of one plus the number of patents (USPTO PatentsView)
   - `RDAT`: R&D expenses divided by total assets (Compustat)
