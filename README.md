@@ -13,26 +13,24 @@ The [sparse_poreg folder](sparse_poreg/) is a separate Stata package for **linea
 
 ## Data and code
 
-- [REPLIC~1.DO](REPLIC~1.DO) is the paper's replication script.
-- [REPLIC~1.DTA](REPLIC~1.DTA) is the public replication dataset.
+- [Replicate_code_MissingRDPatent_ML.do](Replicate_code_MissingRDPatent_ML.do) is the paper's replication script.
+- [Replicate_data_MissingRDPatent_ML.dta](Replicate_data_MissingRDPatent_ML.dta) is the public replication dataset.
 - [panelr2.ado](panelr2.ado) calculates overall, between, and within R-squared.
 - [ReplicateLog_Results](ReplicateLog_Results/) contains saved logs and results.
 - [sparse_poreg](sparse_poreg/) contains the separate linear Stata package.
-
-The uploaded script and dataset have abbreviated filenames on GitHub. The replication script still refers to the dataset by its original, longer name.
 
 ## Reproduce the paper's results
 
 1. Select **Code → Download ZIP** above and extract the repository.
 2. Create a folder named `my_replication_output` inside the extracted repository. This keeps newly generated results separate from the saved results.
-3. Open `REPLIC~1.DO` in Stata's Do-file Editor. Near the top, replace its computer-specific `cd` command and data-loading command with the lines below. Replace the example path with the actual location of your extracted repository.
+3. Open `Replicate_code_MissingRDPatent_ML.do` in Stata's Do-file Editor. Near the top, replace its computer-specific `cd` command and data-loading command with the lines below. Replace the example path with the actual location of your extracted repository.
 
    ```stata
    cd "C:/path/to/repository/my_replication_output"
    clear all
    adopath ++ ".."
    set maxvar 120000
-   use "../REPLIC~1.DTA", clear
+   use "../Replicate_data_MissingRDPatent_ML.dta", clear
    ```
 
 4. Install the commands used by the script if they are missing: `reghdfe`, `ppmlhdfe`, and `estout` (which provides `estadd` and `esttab`).
