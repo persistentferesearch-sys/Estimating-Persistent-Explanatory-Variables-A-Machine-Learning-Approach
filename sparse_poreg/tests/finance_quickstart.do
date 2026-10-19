@@ -8,7 +8,7 @@ if trim(`"`package_root'"') != "" {
 }
 capture which sparse_poreg
 if _rc {
-    display as error "sparse_poreg is not installed; follow START_HERE_FOR_COAUTHORS.txt"
+    display as error "sparse_poreg is not installed; see README.md for installation"
     exit 111
 }
 
