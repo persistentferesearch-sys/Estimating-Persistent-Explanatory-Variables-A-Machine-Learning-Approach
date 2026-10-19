@@ -1,3 +1,4 @@
+
 # Sparse partialing-out for empirical finance
 
 This Stata package helps estimate the association between a variable of interest—such as R&D spending—and an outcome such as patenting, while selecting from many possible controls and firm or year indicators.
@@ -24,6 +25,7 @@ The package requires Stata 16 or newer. The comparisons described below were run
 
 ## Quick start
 ```stata
+* finance_quickstart.do
 version 19.0
 clear all
 set more off
