@@ -1,0 +1,562 @@
+* Shareable Stata log; local filesystem paths and data-file author redacted.
+* Source: https://github.com/persistentferesearch-sys/persistent_fe_remendy
+* GitHub do-file SHA256: 4CDFDCED0295BD7A2A65570A5FD5922859448CF6F4C4C8EF1A1E418486E9E8FA
+* GitHub data SHA256: 870CA7432B9A7FC30CFF2A3312FE7A9BE508BA85A3C9895EEEF78E6F8D7C1A5F
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  <PACKAGE_ROOT>/work/github_release_20261
+> 018/github_full_mata_20261019.log
+  log type:  text
+ opened on:  19 Oct 2026, 08:54:03
+
+. 
+. * Byte-identical copy of the GitHub REPLIC~1.DTA; no data writes.
+. use "<PACKAGE_ROOT>/tests/github_replay_7053da4/Rep
+> licate_data_MissingRDPatent_ML.dta", clear
+(data-file author redacted)
+
+. sort PERMCO fyear
+
+. xtset PERMCO fyear
+
+Panel variable: PERMCO (unbalanced)
+ Time variable: fyear, 1975 to 2000, but with gaps
+         Delta: 1 unit
+
+. 
+. * GitHub variables/options, with sparse all-level indicators in absorb().
+. local innov_used "lnnpatent"
+
+. local rd_used "RDAT"
+
+. local ctrl "lnME RD_missing lnAge lnK2L TobinQ ROA Leverage CASHAT KZidx  Ins
+> tOwn oms_HHidx oms_HHidx_square"
+
+. 
+. timer clear 1
+
+. timer on 1
+
+. sparse_poreg `innov_used' `rd_used' `ctrl', absorb(PERMCO fyear) vce(cluster 
+> PERMCO) selection(bic, gridminok) rseed(1103) backend(mata) strict(stata)
+  0
+  0
+  bic_select: source=minimum knots=24 lambda0= 0.061809 n_eff=11544 clust=1 lam
+> *= 0.011582 i*=19 k*=784 bic*=27019.2899
+bic target=y selected=784
+  1
+  1
+  bic_select: source=minimum knots=7 lambda0= 0.020539 n_eff=11544 clust=1 lam*
+> = 0.014157 i*=5 k*=8 bic*=3977.97713
+bic target=d1 selected=8
+  2
+  2
+  bic_select: source=minimum knots=23 lambda0= 0.304062 n_eff=11544 clust=1 lam
+> *= 0.056976 i*=19 k*=14 bic*=47325.104
+bic target=d2 selected=14
+  3
+  3
+  bic_select: source=minimum knots=19 lambda0= 0.026406 n_eff=11544 clust=1 lam
+> *= 0.018201 i*=5 k*=1 bic*=16603.5105
+bic target=d3 selected=1
+  4
+  4
+  bic_select: source=minimum knots=19 lambda0= 0.072509 n_eff=11544 clust=1 lam
+> *= 0.017961 i*=16 k*=10 bic*=24159.6587
+bic target=d4 selected=10
+  5
+  5
+  bic_select: source=minimum knots=19 lambda0= 0.172916 n_eff=11544 clust=1 lam
+> *= 0.042833 i*=16 k*=8 bic*=39008.3081
+bic target=d5 selected=8
+  6
+  6
+  bic_select: source=minimum knots=22 lambda0= 0.218966 n_eff=11544 clust=1 lam
+> *= 0.065332 i*=14 k*=114 bic*=47840.1945
+bic target=d6 selected=114
+  7
+  7
+  bic_select: source=minimum knots=14 lambda0= 0.024429 n_eff=11544 clust=1 lam
+> *= 0.008779 i*=12 k*=7 bic*=-1138.21183
+bic target=d7 selected=7
+  8
+  8
+  bic_select: source=minimum knots=15 lambda0= 0.017093 n_eff=11544 clust=1 lam
+> *= 0.007399 i*=10 k*=1 bic*=-4466.90049
+bic target=d8 selected=1
+  9
+  9
+  bic_select: source=minimum knots=18 lambda0= 0.027371 n_eff=11544 clust=1 lam
+> *= 0.006780 i*=16 k*=12 bic*=-4408.0524
+bic target=d9 selected=12
+  10
+  10
+  bic_select: source=minimum knots=27 lambda0= 1.353058 n_eff=11544 clust=1 lam
+> *= 0.231015 i*=20 k*=414 bic*=90005.1319
+bic target=d10 selected=414
+  11
+  11
+  bic_select: source=minimum knots=24 lambda0= 0.040799 n_eff=11544 clust=1 lam
+> *= 0.005783 i*=22 k*=24 bic*=-3307.74329
+bic target=d11 selected=24
+  12
+  12
+  bic_select: source=minimum knots=7 lambda0= 0.011070 n_eff=11544 clust=1 lam*
+> = 0.011070 i*=1 k*=0 bic*=-4322.64028
+bic target=d12 selected=0
+  13
+  13
+  bic_select: source=minimum knots=13 lambda0= 0.016383 n_eff=11544 clust=1 lam
+> *= 0.006462 i*=11 k*=10 bic*=-474.687142
+bic target=d13 selected=10
+                            (Std. err. adjusted for 11,544 clusters in PERMCO)
+------------------------------------------------------------------------------
+             |           Cluster-robust
+   lnnpatent | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        RDAT |   .1986367   .0181304    10.96   0.000     .1631018    .2341716
+        lnME |   .0335335    .003827     8.76   0.000     .0260328    .0410342
+  RD_missing |  -.1505958    .008657   -17.40   0.000    -.1675632   -.1336284
+       lnAge |   .0555046    .005905     9.40   0.000      .043931    .0670781
+       lnK2L |   .0057017   .0025703     2.22   0.027     .0006641    .0107394
+      TobinQ |   .0037628   .0027739     1.36   0.175     -.001674    .0091996
+         ROA |   .0292851    .021676     1.35   0.177    -.0131991    .0717693
+    Leverage |  -.0545895   .0183714    -2.97   0.003    -.0905969   -.0185821
+      CASHAT |   .0747047   .0238717     3.13   0.002     .0279169    .1214924
+       KZidx |   .0000725   .0003324     0.22   0.827     -.000579    .0007241
+     InstOwn |   .0052065   .0251366     0.21   0.836    -.0440604    .0544733
+   oms_HHidx |   .2885061   .0550278     5.24   0.000     .1806537    .3963586
+oms_HHidx_~e |  -.2500799   .0492933    -5.07   0.000    -.3466931   -.1534668
+------------------------------------------------------------------------------
+
+. timer off 1
+
+. display as result "GITHUB_FULL_MATA_PO_RESULT b_RDAT=" %21.15g _b[RDAT] " se_
+> RDAT=" %21.15g _se[RDAT] " N=" %12.0f e(N)
+GITHUB_FULL_MATA_PO_RESULT b_RDAT=     .198636660737147 se_RDAT=    .0181303830
+> 386044 N=       86341
+
+. estimates save "<PACKAGE_ROOT>/work/github_release_
+> 20261018/github_full_mata_po.ster", replace
+(note: file <PACKAGE_ROOT>/work/github_release_202610
+> 18/github_full_mata_po.ster not found)
+file <PACKAGE_ROOT>/work/github_release_20261018/gith
+> ub_full_mata_po.ster saved
+
+. timer list 1
+   1:    477.90 /        1 =     477.8970
+
+. display as result "GITHUB_FULL_MATA_PO_COMPLETE"
+GITHUB_FULL_MATA_PO_COMPLETE
+
+. 
+. timer clear 2
+
+. timer on 2
+
+. sparse_xporeg `innov_used' `rd_used' `ctrl', absorb(PERMCO fyear) vce(cluster
+>  PERMCO) xfolds(5) rseed(1103) selection(bic, gridminok) backend(mata) fronti
+> erok strict(stata)
+(0 observations deleted)
+(0 observations deleted)
+warning: strict(stata) is using official-compatible absent/singleton training-l
+> evel handling
+use strict(production) to require minimum training support of two
+  0
+  0
+  bic_select: source=minimum knots=24 lambda0= 0.062150 n_eff=11138 clust=1 lam
+> *= 0.011646 i*=19 k*=792 bic*=26587.64
+fold=1 bic target=y selected=792
+  1
+  1
+  bic_select: source=minimum knots=6 lambda0= 0.019566 n_eff=11138 clust=1 lam*
+> = 0.014801 i*=4 k*=8 bic*=4070.77448
+fold=1 bic target=d1 selected=8
+  2
+  2
+  bic_select: source=minimum knots=22 lambda0= 0.295269 n_eff=11138 clust=1 lam
+> *= 0.055328 i*=19 k*=15 bic*=45696.0267
+fold=1 bic target=d2 selected=15
+  3
+  3
+  bic_select: source=minimum knots=19 lambda0= 0.026881 n_eff=11138 clust=1 lam
+> *= 0.018528 i*=5 k*=1 bic*=16016.9343
+fold=1 bic target=d3 selected=1
+  4
+  4
+  bic_select: source=minimum knots=19 lambda0= 0.072490 n_eff=11138 clust=1 lam
+> *= 0.017956 i*=16 k*=11 bic*=23344.4772
+fold=1 bic target=d4 selected=11
+  5
+  5
+  bic_select: source=minimum knots=19 lambda0= 0.167976 n_eff=11138 clust=1 lam
+> *= 0.041609 i*=16 k*=9 bic*=37583.2814
+fold=1 bic target=d5 selected=9
+  6
+  6
+  bic_select: source=minimum knots=24 lambda0= 0.224368 n_eff=11138 clust=1 lam
+> *= 0.050640 i*=17 k*=250 bic*=46051.1154
+fold=1 bic target=d6 selected=250
+  7
+  7
+  bic_select: source=minimum knots=13 lambda0= 0.023342 n_eff=11138 clust=1 lam
+> *= 0.009206 i*=11 k*=7 bic*=-1303.42228
+fold=1 bic target=d7 selected=7
+  8
+  8
+  bic_select: source=minimum knots=15 lambda0= 0.016189 n_eff=11138 clust=1 lam
+> *= 0.008441 i*=8 k*=1 bic*=-4336.85213
+fold=1 bic target=d8 selected=1
+  9
+  9
+  bic_select: source=minimum knots=17 lambda0= 0.026843 n_eff=11138 clust=1 lam
+> *= 0.007298 i*=15 k*=12 bic*=-4365.8787
+fold=1 bic target=d9 selected=12
+  10
+  10
+  bic_select: source=minimum knots=26 lambda0= 1.216561 n_eff=11138 clust=1 lam
+> *= 0.227961 i*=19 k*=430 bic*=86376.6433
+fold=1 bic target=d10 selected=430
+  11
+  11
+  bic_select: source=minimum knots=23 lambda0= 0.040277 n_eff=11138 clust=1 lam
+> *= 0.006266 i*=21 k*=20 bic*=-3147.71839
+fold=1 bic target=d11 selected=20
+  12
+  12
+  bic_select: source=minimum knots=6 lambda0= 0.010162 n_eff=11138 clust=1 lam*
+> = 0.010162 i*=1 k*=0 bic*=-4246.06691
+fold=1 bic target=d12 selected=0
+  13
+  13
+  bic_select: source=minimum knots=4 lambda0= 0.015193 n_eff=11138 clust=1 lam*
+> = 0.015193 i*=1 k*=0 bic*=-407.079137
+fold=1 bic target=d13 selected=0
+  14
+  14
+  bic_select: source=minimum knots=23 lambda0= 0.064044 n_eff=11136 clust=1 lam
+> *= 0.013171 i*=18 k*=677 bic*=26308.019
+fold=2 bic target=y selected=677
+  15
+  15
+  bic_select: source=minimum knots=7 lambda0= 0.022193 n_eff=11136 clust=1 lam*
+> = 0.015297 i*=5 k*=5 bic*=3869.7748
+fold=2 bic target=d1 selected=5
+  16
+  16
+  bic_select: source=minimum knots=22 lambda0= 0.282668 n_eff=11136 clust=1 lam
+> *= 0.058131 i*=18 k*=16 bic*=45673.0133
+fold=2 bic target=d2 selected=16
+  17
+  17
+  bic_select: source=minimum knots=17 lambda0= 0.022921 n_eff=11136 clust=1 lam
+> *= 0.022921 i*=1 k*=0 bic*=16025.0903
+fold=2 bic target=d3 selected=0
+  18
+  18
+  bic_select: source=minimum knots=19 lambda0= 0.073110 n_eff=11136 clust=1 lam
+> *= 0.018110 i*=16 k*=10 bic*=23398.4645
+fold=2 bic target=d4 selected=10
+  19
+  19
+  bic_select: source=minimum knots=19 lambda0= 0.170557 n_eff=11136 clust=1 lam
+> *= 0.042248 i*=16 k*=8 bic*=37601.2385
+fold=2 bic target=d5 selected=8
+  20
+  20
+  bic_select: source=minimum knots=23 lambda0= 0.235021 n_eff=11136 clust=1 lam
+> *= 0.048332 i*=18 k*=257 bic*=45842.2601
+fold=2 bic target=d6 selected=257
+  21
+  21
+  bic_select: source=minimum knots=13 lambda0= 0.022595 n_eff=11136 clust=1 lam
+> *= 0.008912 i*=11 k*=8 bic*=-1421.53421
+fold=2 bic target=d7 selected=8
+  22
+  22
+  bic_select: source=minimum knots=14 lambda0= 0.014891 n_eff=11136 clust=1 lam
+> *= 0.007764 i*=8 k*=1 bic*=-4381.69904
+fold=2 bic target=d8 selected=1
+  23
+  23
+  bic_select: source=minimum knots=16 lambda0= 0.023898 n_eff=11136 clust=1 lam
+> *= 0.007130 i*=14 k*=12 bic*=-4325.66949
+fold=2 bic target=d9 selected=12
+  24
+  24
+  bic_select: source=minimum knots=25 lambda0= 1.148807 n_eff=11136 clust=1 lam
+> *= 0.196142 i*=20 k*=513 bic*=86456.2511
+fold=2 bic target=d10 selected=513
+  25
+  25
+  bic_select: source=minimum knots=24 lambda0= 0.040977 n_eff=11136 clust=1 lam
+> *= 0.006375 i*=21 k*=20 bic*=-3199.7459
+fold=2 bic target=d11 selected=20
+  26
+  26
+  bic_select: source=minimum knots=6 lambda0= 0.010150 n_eff=11136 clust=1 lam*
+> = 0.010150 i*=1 k*=0 bic*=-4084.15565
+fold=2 bic target=d12 selected=0
+  27
+  27
+  bic_select: source=minimum knots=3 lambda0= 0.015084 n_eff=11136 clust=1 lam*
+> = 0.015084 i*=1 k*=0 bic*=-336.333633
+fold=2 bic target=d13 selected=0
+  28
+  28
+  bic_select: source=minimum knots=25 lambda0= 0.063019 n_eff=11125 clust=1 lam
+> *= 0.012960 i*=18 k*=703 bic*=26351.9291
+fold=3 bic target=y selected=703
+  29
+  29
+  bic_select: source=minimum knots=6 lambda0= 0.020553 n_eff=11125 clust=1 lam*
+> = 0.015548 i*=4 k*=5 bic*=3635.0839
+fold=3 bic target=d1 selected=5
+  30
+  30
+  bic_select: source=minimum knots=22 lambda0= 0.287214 n_eff=11125 clust=1 lam
+> *= 0.059066 i*=18 k*=14 bic*=45648.8073
+fold=3 bic target=d2 selected=14
+  31
+  31
+  bic_select: source=minimum knots=18 lambda0= 0.023877 n_eff=11125 clust=1 lam
+> *= 0.018062 i*=4 k*=1 bic*=16015.3483
+fold=3 bic target=d3 selected=1
+  32
+  32
+  bic_select: source=minimum knots=19 lambda0= 0.073735 n_eff=11125 clust=1 lam
+> *= 0.018265 i*=16 k*=11 bic*=23403.4967
+fold=3 bic target=d4 selected=11
+  33
+  33
+  bic_select: source=minimum knots=19 lambda0= 0.170232 n_eff=11125 clust=1 lam
+> *= 0.042168 i*=16 k*=8 bic*=37582.8733
+fold=3 bic target=d5 selected=8
+  34
+  34
+  bic_select: source=minimum knots=23 lambda0= 0.212248 n_eff=11125 clust=1 lam
+> *= 0.063327 i*=14 k*=131 bic*=45748.1949
+fold=3 bic target=d6 selected=131
+  35
+  35
+  bic_select: source=minimum knots=13 lambda0= 0.022357 n_eff=11125 clust=1 lam
+> *= 0.009678 i*=10 k*=7 bic*=-1761.69469
+fold=3 bic target=d7 selected=7
+  36
+  36
+  bic_select: source=minimum knots=13 lambda0= 0.014195 n_eff=11125 clust=1 lam
+> *= 0.008123 i*=7 k*=1 bic*=-4336.37527
+fold=3 bic target=d8 selected=1
+  37
+  37
+  bic_select: source=minimum knots=16 lambda0= 0.024255 n_eff=11125 clust=1 lam
+> *= 0.007237 i*=14 k*=12 bic*=-4441.94583
+fold=3 bic target=d9 selected=12
+  38
+  38
+  bic_select: source=minimum knots=25 lambda0= 1.145153 n_eff=11125 clust=1 lam
+> *= 0.235502 i*=18 k*=403 bic*=86496.7206
+fold=3 bic target=d10 selected=403
+  39
+  39
+  bic_select: source=minimum knots=24 lambda0= 0.040714 n_eff=11125 clust=1 lam
+> *= 0.006334 i*=21 k*=20 bic*=-3134.99892
+fold=3 bic target=d11 selected=20
+  40
+  40
+  bic_select: source=minimum knots=6 lambda0= 0.010470 n_eff=11125 clust=1 lam*
+> = 0.010470 i*=1 k*=0 bic*=-4151.45305
+fold=3 bic target=d12 selected=0
+  41
+  41
+  bic_select: source=minimum knots=12 lambda0= 0.015527 n_eff=11125 clust=1 lam
+> *= 0.006721 i*=10 k*=9 bic*=-449.465096
+fold=3 bic target=d13 selected=9
+  42
+  42
+  bic_select: source=minimum knots=24 lambda0= 0.062727 n_eff=11138 clust=1 lam
+> *= 0.011754 i*=19 k*=777 bic*=26246.4048
+fold=4 bic target=y selected=777
+  43
+  43
+  bic_select: source=minimum knots=7 lambda0= 0.022161 n_eff=11138 clust=1 lam*
+> = 0.015275 i*=5 k*=5 bic*=3911.39768
+fold=4 bic target=d1 selected=5
+  44
+  44
+  bic_select: source=minimum knots=22 lambda0= 0.285973 n_eff=11138 clust=1 lam
+> *= 0.058811 i*=18 k*=13 bic*=45664.5339
+fold=4 bic target=d2 selected=13
+  45
+  45
+  bic_select: source=minimum knots=18 lambda0= 0.025089 n_eff=11138 clust=1 lam
+> *= 0.018979 i*=4 k*=1 bic*=16024.2432
+fold=4 bic target=d3 selected=1
+  46
+  46
+  bic_select: source=minimum knots=19 lambda0= 0.071688 n_eff=11138 clust=1 lam
+> *= 0.017758 i*=16 k*=11 bic*=23371.3995
+fold=4 bic target=d4 selected=11
+  47
+  47
+  bic_select: source=minimum knots=19 lambda0= 0.171480 n_eff=11138 clust=1 lam
+> *= 0.042477 i*=16 k*=9 bic*=37582.2231
+fold=4 bic target=d5 selected=9
+  48
+  48
+  bic_select: source=minimum knots=22 lambda0= 0.218698 n_eff=11138 clust=1 lam
+> *= 0.065252 i*=14 k*=125 bic*=46073.3678
+fold=4 bic target=d6 selected=125
+  49
+  49
+  bic_select: source=minimum knots=13 lambda0= 0.022294 n_eff=11138 clust=1 lam
+> *= 0.009650 i*=10 k*=7 bic*=-1503.9224
+fold=4 bic target=d7 selected=7
+  50
+  50
+  bic_select: source=minimum knots=13 lambda0= 0.016109 n_eff=11138 clust=1 lam
+> *= 0.007653 i*=9 k*=1 bic*=-4435.8504
+fold=4 bic target=d8 selected=1
+  51
+  51
+  bic_select: source=minimum knots=16 lambda0= 0.024624 n_eff=11138 clust=1 lam
+> *= 0.007347 i*=14 k*=12 bic*=-4308.56339
+fold=4 bic target=d9 selected=12
+  52
+  52
+  bic_select: source=minimum knots=26 lambda0= 1.273497 n_eff=11138 clust=1 lam
+> *= 0.198115 i*=21 k*=501 bic*=86488.0362
+fold=4 bic target=d10 selected=501
+  53
+  53
+  bic_select: source=minimum knots=23 lambda0= 0.040382 n_eff=11138 clust=1 lam
+> *= 0.006282 i*=21 k*=20 bic*=-3140.51706
+fold=4 bic target=d11 selected=20
+  54
+  54
+  bic_select: source=minimum knots=6 lambda0= 0.010307 n_eff=11138 clust=1 lam*
+> = 0.010307 i*=1 k*=0 bic*=-4193.71167
+fold=4 bic target=d12 selected=0
+  55
+  55
+  bic_select: source=minimum knots=12 lambda0= 0.015257 n_eff=11138 clust=1 lam
+> *= 0.006604 i*=10 k*=12 bic*=-467.104761
+fold=4 bic target=d13 selected=12
+  56
+  56
+  bic_select: source=minimum knots=24 lambda0= 0.062799 n_eff=11136 clust=1 lam
+> *= 0.012915 i*=18 k*=695 bic*=26422.5365
+fold=5 bic target=y selected=695
+  57
+  57
+  bic_select: source=minimum knots=7 lambda0= 0.021453 n_eff=11136 clust=1 lam*
+> = 0.014787 i*=5 k*=6 bic*=3972.69154
+fold=5 bic target=d1 selected=6
+  58
+  58
+  bic_select: source=minimum knots=22 lambda0= 0.281732 n_eff=11136 clust=1 lam
+> *= 0.057939 i*=18 k*=13 bic*=45687.0956
+fold=5 bic target=d2 selected=13
+  59
+  59
+  bic_select: source=minimum knots=18 lambda0= 0.025361 n_eff=11136 clust=1 lam
+> *= 0.017480 i*=5 k*=1 bic*=16012.9249
+fold=5 bic target=d3 selected=1
+  60
+  60
+  bic_select: source=minimum knots=19 lambda0= 0.072275 n_eff=11136 clust=1 lam
+> *= 0.017903 i*=16 k*=10 bic*=23379.5813
+fold=5 bic target=d4 selected=10
+  61
+  61
+  bic_select: source=minimum knots=19 lambda0= 0.172426 n_eff=11136 clust=1 lam
+> *= 0.042711 i*=16 k*=8 bic*=37607.0065
+fold=5 bic target=d5 selected=8
+  62
+  62
+  bic_select: source=minimum knots=24 lambda0= 0.226296 n_eff=11136 clust=1 lam
+> *= 0.061520 i*=15 k*=155 bic*=46081.1199
+fold=5 bic target=d6 selected=155
+  63
+  63
+  bic_select: source=minimum knots=12 lambda0= 0.021822 n_eff=11136 clust=1 lam
+> *= 0.009446 i*=10 k*=7 bic*=-1290.30706
+fold=5 bic target=d7 selected=7
+  64
+  64
+  bic_select: source=minimum knots=15 lambda0= 0.016220 n_eff=11136 clust=1 lam
+> *= 0.007021 i*=10 k*=2 bic*=-4434.87182
+fold=5 bic target=d8 selected=2
+  65
+  65
+  bic_select: source=minimum knots=17 lambda0= 0.025796 n_eff=11136 clust=1 lam
+> *= 0.007013 i*=15 k*=12 bic*=-4285.74864
+fold=5 bic target=d9 selected=12
+  66
+  66
+  bic_select: source=minimum knots=27 lambda0= 1.365473 n_eff=11136 clust=1 lam
+> *= 0.233134 i*=20 k*=398 bic*=86108.6868
+fold=5 bic target=d10 selected=398
+  67
+  67
+  bic_select: source=minimum knots=23 lambda0= 0.040280 n_eff=11136 clust=1 lam
+> *= 0.006266 i*=21 k*=20 bic*=-3246.31542
+fold=5 bic target=d11 selected=20
+  68
+  68
+  bic_select: source=minimum knots=6 lambda0= 0.010090 n_eff=11136 clust=1 lam*
+> = 0.010090 i*=1 k*=0 bic*=-4090.85251
+fold=5 bic target=d12 selected=0
+  69
+  69
+  bic_select: source=minimum knots=3 lambda0= 0.014052 n_eff=11136 clust=1 lam*
+> = 0.014052 i*=1 k*=0 bic*=-332.467011
+fold=5 bic target=d13 selected=0
+                            (Std. err. adjusted for 11,544 clusters in PERMCO)
+------------------------------------------------------------------------------
+             |           Cluster-robust
+   lnnpatent | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        RDAT |   .2131053   .0136054    15.66   0.000     .1864393    .2397713
+        lnME |   .0380684   .0026831    14.19   0.000     .0328095    .0433272
+  RD_missing |  -.1616174   .0056502   -28.60   0.000    -.1726916   -.1505432
+       lnAge |   .0553494   .0041529    13.33   0.000     .0472099    .0634889
+       lnK2L |   .0101206   .0018017     5.62   0.000     .0065894    .0136519
+      TobinQ |   .0011278   .0019966     0.56   0.572    -.0027855     .005041
+         ROA |   .0095319   .0158944     0.60   0.549    -.0216206    .0406844
+    Leverage |  -.0651676   .0132345    -4.92   0.000    -.0911067   -.0392285
+      CASHAT |     .05062   .0179307     2.82   0.005     .0154765    .0857635
+       KZidx |  -.0005119   .0002555    -2.00   0.045    -.0010127   -.0000111
+     InstOwn |   .0066914   .0192539     0.35   0.728    -.0310456    .0444284
+   oms_HHidx |   .2619876   .0398326     6.58   0.000     .1839171    .3400581
+oms_HHidx_~e |   -.227414   .0358549    -6.34   0.000    -.2976884   -.1571396
+------------------------------------------------------------------------------
+
+. timer off 2
+
+. display as result "GITHUB_FULL_MATA_XPO_RESULT b_RDAT=" %21.15g _b[RDAT] " se
+> _RDAT=" %21.15g _se[RDAT] " N=" %12.0f e(N)
+GITHUB_FULL_MATA_XPO_RESULT b_RDAT=     .213105298267939 se_RDAT=    .013605369
+> 8613053 N=       86341
+
+. estimates save "<PACKAGE_ROOT>/work/github_release_
+> 20261018/github_full_mata_xpo.ster", replace
+(note: file <PACKAGE_ROOT>/work/github_release_202610
+> 18/github_full_mata_xpo.ster not found)
+file <PACKAGE_ROOT>/work/github_release_20261018/gith
+> ub_full_mata_xpo.ster saved
+
+. timer list 2
+   2:   2107.91 /        1 =    2107.9110
+
+. display as result "GITHUB_FULL_MATA_XPO_COMPLETE"
+GITHUB_FULL_MATA_XPO_COMPLETE
+
+. 
+. log close
+      name:  <unnamed>
+       log:  <PACKAGE_ROOT>/work/github_release_20261
+> 018/github_full_mata_20261019.log
+  log type:  text
+ closed on:  19 Oct 2026, 09:37:09
+-------------------------------------------------------------------------------

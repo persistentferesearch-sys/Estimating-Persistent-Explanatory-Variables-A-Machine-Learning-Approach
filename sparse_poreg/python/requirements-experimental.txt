@@ -1,0 +1,7 @@
+# Reproduces the backend environment tested on 2026-07-17.
+# This DoubleML/LassoCV PLR path remains experimental, not plugin/BIC parity.
+numpy==2.3.5
+pandas==2.2.3
+scipy==1.15.3
+scikit-learn==1.8.0
+doubleml==0.11.3

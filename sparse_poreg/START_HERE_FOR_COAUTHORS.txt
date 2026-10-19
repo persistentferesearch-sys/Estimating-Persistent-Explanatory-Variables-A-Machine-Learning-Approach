@@ -1,0 +1,137 @@
+SPARSE_POREG: THREE-MINUTE COAUTHOR CHECK
+==========================================
+
+You need Stata 19. You do NOT need Python, PowerShell, or real research data.
+
+1. Right-click the ZIP file and choose "Extract All".
+
+2. Open Stata 19.
+
+3. In Stata, choose:
+
+       File > Change Working Directory...
+
+   Select the extracted folder named sparse_poreg-0.8.4-rc14.
+   It is the folder that contains stata.toc.
+
+4. Copy these two lines into Stata's Command window:
+
+       net install sparse_poreg, from("`c(pwd)'") replace
+       do "tests/finance_quickstart.do"
+
+5. Wait for the green message:
+
+       PASS: the official and fast Mata results agree.
+
+6. Send a screenshot of that green PASS message to the author.
+
+What the example does
+---------------------
+
+The example creates harmless artificial firm-year data. It estimates a simple
+R&D-patent regression with firm and year fixed effects and firm-clustered
+standard errors. It runs the small-data official route and the fast Mata route,
+then checks that their coefficient and standard error agree numerically.
+
+If Stata shows a red error, send a screenshot of the entire Stata window. No
+other troubleshooting is required from you.
+
+
+USING THE PACKAGE LATER WITH YOUR OWN DATA
+==========================================
+
+After the green PASS, the package is installed. You do not need to extract or
+install it again in later Stata sessions.
+
+1. Open Stata and load your data.
+
+2. Open Stata's Do-file Editor, paste your model, and click Execute.
+
+3. Start with backend(auto). For example:
+
+       use "C:/path/to/mydata.dta", clear
+
+       sparse_poreg lnnpatent ///
+           rd5yat lnme lnage lnppent_emp rd_miss ///
+           tobinq roa leverage cash_at kzidx IOR ///
+           hhi_sic3 hhi_sic3_sqr, ///
+           absorb(PERMCO fyear) ///
+           selection(bic, gridminok) ///
+           vce(cluster PERMCO) ///
+           rseed(1103) ///
+           backend(auto)
+
+Change the data path and variable names to match your project. Every variable
+before the comma receives a coefficient and standard error. absorb(PERMCO
+fyear) supplies firm and year fixed effects. vce(cluster PERMCO) clusters the
+standard errors by firm.
+
+IF THE FIRM/YEAR DUMMY SET IS VERY LARGE
+----------------------------------------
+
+Keep the entire command unchanged and replace only:
+
+       backend(auto)
+
+with:
+
+       backend(mata) strict(production)
+
+There is no kernel option to choose.
+
+OPTIONAL: CROSS-FITTED XPO
+--------------------------
+
+Use the same variables, change sparse_poreg to sparse_xporeg, and add the fold
+options:
+
+       sparse_xporeg lnnpatent ///
+           rd5yat lnme lnage lnppent_emp rd_miss ///
+           tobinq roa leverage cash_at kzidx IOR ///
+           hhi_sic3 hhi_sic3_sqr, ///
+           absorb(PERMCO fyear) ///
+           selection(bic, gridminok) ///
+           vce(cluster PERMCO) ///
+           xfolds(5) rseed(1103) ///
+           backend(auto)
+
+Simple rule
+-----------
+
+Routine work:      backend(auto)
+Very large PO:     backend(mata) strict(production)
+No reinstalling, no Python, no PowerShell, and no kernel option.
+
+
+OPTIONAL: USING THE PYTHON BACKEND
+==================================
+
+Most users do not need Python. Use it only as an additional robustness check.
+Python uses LassoCV, so its selected controls and estimates are not expected to
+be identical to the official or Mata plugin/BIC results.
+
+First, type this in Stata:
+
+       python query
+
+If Stata displays a Python executable, take the PO command above and replace:
+
+       selection(bic, gridminok)
+       backend(auto)
+
+with:
+
+       selection(lassocv) learner(lassocv)
+       backend(python)
+
+For Python XPO with vce(cluster PERMCO), also add:
+
+       foldcluster(PERMCO)
+
+If python query does not display a working executable, ask an RA or IT person
+to configure Python for Stata and install the packages listed in:
+
+       python/requirements-experimental.txt
+
+The Python backend is optional. Use backend(auto) or backend(mata) for the main
+official/plugin/BIC analysis.

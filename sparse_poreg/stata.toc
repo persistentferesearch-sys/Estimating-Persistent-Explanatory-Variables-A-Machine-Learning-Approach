@@ -1,0 +1,4 @@
+v 3
+d sparse_poreg: official-first and sparse large-design partialing-out lasso
+p sparse_poreg poregression/xporegression wrapper with Mata and experimental Python backends
+

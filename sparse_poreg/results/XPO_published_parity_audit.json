@@ -1,0 +1,177 @@
+{
+  "scope": "GitHub published DML linear XPO versus package Mata strict(stata), full 86,341-observation dataset",
+  "github_repo": "https://github.com/persistentferesearch-sys/persistent_fe_remendy",
+  "github_blob_sha1": {
+    "do": "9376e2a83ab1dfd80c906308e0d54a1e910d747a",
+    "data": "c5bac67e3d494622d8220b0d376649026b27dbbe",
+    "dml_csv": "e127116b3500478ed3f0f97974684129e53def3d",
+    "dml_log": "305714f5a460ac3d84b332647b0030be01b3588b"
+  },
+  "source_binding": "Local do, data, DML CSV, and DML log Git blob hashes independently match current GitHub API metadata.",
+  "github_reported": {
+    "N": 86341,
+    "clusters": 11544,
+    "controls": 11570,
+    "selected_controls": 1737,
+    "folds": 5
+  },
+  "mata_saved_estimate": {
+    "N": 86341,
+    "clusters": 11544,
+    "controls": 11570,
+    "selected_controls": 1737,
+    "folds": 5,
+    "RDAT_coef_full_precision": 0.213105298267939,
+    "RDAT_se_full_precision": 0.0136053698613053,
+    "seconds": 2107.911
+  },
+  "printed_precision_pairs": {
+    "RDAT": {
+      "github": {
+        "coef": ".2131053",
+        "se": ".0136054"
+      },
+      "mata": {
+        "coef": ".2131053",
+        "se": ".0136054"
+      },
+      "printed_match": true
+    },
+    "lnME": {
+      "github": {
+        "coef": ".0380684",
+        "se": ".0026831"
+      },
+      "mata": {
+        "coef": ".0380684",
+        "se": ".0026831"
+      },
+      "printed_match": true
+    },
+    "RD_missing": {
+      "github": {
+        "coef": "-.1616174",
+        "se": ".0056502"
+      },
+      "mata": {
+        "coef": "-.1616174",
+        "se": ".0056502"
+      },
+      "printed_match": true
+    },
+    "lnAge": {
+      "github": {
+        "coef": ".0553494",
+        "se": ".0041529"
+      },
+      "mata": {
+        "coef": ".0553494",
+        "se": ".0041529"
+      },
+      "printed_match": true
+    },
+    "lnK2L": {
+      "github": {
+        "coef": ".0101206",
+        "se": ".0018017"
+      },
+      "mata": {
+        "coef": ".0101206",
+        "se": ".0018017"
+      },
+      "printed_match": true
+    },
+    "TobinQ": {
+      "github": {
+        "coef": ".0011278",
+        "se": ".0019966"
+      },
+      "mata": {
+        "coef": ".0011278",
+        "se": ".0019966"
+      },
+      "printed_match": true
+    },
+    "ROA": {
+      "github": {
+        "coef": ".0095319",
+        "se": ".0158944"
+      },
+      "mata": {
+        "coef": ".0095319",
+        "se": ".0158944"
+      },
+      "printed_match": true
+    },
+    "Leverage": {
+      "github": {
+        "coef": "-.0651676",
+        "se": ".0132345"
+      },
+      "mata": {
+        "coef": "-.0651676",
+        "se": ".0132345"
+      },
+      "printed_match": true
+    },
+    "CASHAT": {
+      "github": {
+        "coef": ".05062",
+        "se": ".0179307"
+      },
+      "mata": {
+        "coef": ".05062",
+        "se": ".0179307"
+      },
+      "printed_match": true
+    },
+    "KZidx": {
+      "github": {
+        "coef": "-.0005119",
+        "se": ".0002555"
+      },
+      "mata": {
+        "coef": "-.0005119",
+        "se": ".0002555"
+      },
+      "printed_match": true
+    },
+    "InstOwn": {
+      "github": {
+        "coef": ".0066914",
+        "se": ".0192539"
+      },
+      "mata": {
+        "coef": ".0066914",
+        "se": ".0192539"
+      },
+      "printed_match": true
+    },
+    "oms_HHidx": {
+      "github": {
+        "coef": ".2619876",
+        "se": ".0398326"
+      },
+      "mata": {
+        "coef": ".2619876",
+        "se": ".0398326"
+      },
+      "printed_match": true
+    },
+    "oms_HHidx_square": {
+      "github": {
+        "coef": "-.227414",
+        "se": ".0358549"
+      },
+      "mata": {
+        "coef": "-.227414",
+        "se": ".0358549"
+      },
+      "printed_match": true
+    }
+  },
+  "printed_match_count": 13,
+  "full_precision_covariance_parity": "not_established_from_published_log",
+  "github_published_log_sha256": "3281F4E410876036AEABE7E11F98602475FB48B576E2DAADACEC48951EE4A867",
+  "mata_log_sha256": "B783EC2FF5D36345673C7764B8857C24E9D2DAF9FA99E422549BE5711BDAF68E"
+}

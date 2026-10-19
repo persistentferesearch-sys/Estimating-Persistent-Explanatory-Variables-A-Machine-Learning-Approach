@@ -1,0 +1,75 @@
+﻿-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  <PACKAGE_ROOT>/work/github_release_20261
+> 018/github_full_po_parity_audit.log
+  log type:  text
+ opened on:  19 Oct 2026, 09:11:20
+
+. 
+. estimates use "`root'/github_full_exact_`kind'.ster"
+
+. matrix b_exact = e(b)
+
+. matrix V_exact = e(V)
+
+. scalar exact_RDAT = _b[RDAT]
+
+. scalar exact_SE = _se[RDAT]
+
+. estimates use "`root'/github_full_mata_`kind'.ster"
+
+. matrix b_mata = e(b)
+
+. matrix V_mata = e(V)
+
+. scalar mata_RDAT = _b[RDAT]
+
+. scalar mata_SE = _se[RDAT]
+
+. 
+. mata: st_numscalar("max_b_diff", max(abs(st_matrix("b_exact")-st_matrix("b_ma
+> ta"))))
+
+. mata: st_numscalar("max_V_diff", max(abs(st_matrix("V_exact")-st_matrix("V_ma
+> ta"))))
+
+. mata: st_numscalar("stripes_equal", all(st_matrixcolstripe("b_exact"):==st_ma
+> trixcolstripe("b_mata")))
+
+. display as result "AUDIT_KIND=`kind'"
+AUDIT_KIND=po
+
+. display as result "EXACT_RDAT=" %21.15g scalar(exact_RDAT) " EXACT_SE=" %21.1
+> 5g scalar(exact_SE)
+EXACT_RDAT=     .198636660737012 EXACT_SE=    .0181303830385999
+
+. display as result "MATA_RDAT=" %21.15g scalar(mata_RDAT) " MATA_SE=" %21.15g 
+> scalar(mata_SE)
+MATA_RDAT=     .198636660737147 MATA_SE=    .0181303830386044
+
+. display as result "MAX_B_DIFF=" %21.15g scalar(max_b_diff)
+MAX_B_DIFF= 1.35197408823728e-13
+
+. display as result "MAX_V_DIFF=" %21.15g scalar(max_V_diff)
+MAX_V_DIFF= 2.08904074594507e-15
+
+. display as result "STRIPES_EQUAL=" scalar(stripes_equal)
+STRIPES_EQUAL=1
+
+. assert scalar(stripes_equal) == 1
+
+. assert scalar(max_b_diff) < 1e-10
+
+. assert scalar(max_V_diff) < 1e-10
+
+. display as result "FULL_`kind'_NUMERICAL_PARITY_PASS"
+FULL_po_NUMERICAL_PARITY_PASS
+
+. log close
+      name:  <unnamed>
+       log:  <PACKAGE_ROOT>/work/github_release_20261
+> 018/github_full_po_parity_audit.log
+  log type:  text
+ closed on:  19 Oct 2026, 09:11:21
+-------------------------------------------------------------------------------
+

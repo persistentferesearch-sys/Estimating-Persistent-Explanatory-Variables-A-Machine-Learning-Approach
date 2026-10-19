@@ -1,0 +1,109 @@
+﻿* Complete PO block from local package backend(official) run; XPO follows in the still-running source log.
+* Model and command are documented in COMPARISON.md.
+* Shareable Stata log; local filesystem paths and data-file author redacted.
+* Source: https://github.com/persistentferesearch-sys/persistent_fe_remendy
+* GitHub do-file SHA256: 4CDFDCED0295BD7A2A65570A5FD5922859448CF6F4C4C8EF1A1E418486E9E8FA
+* GitHub data SHA256: 870CA7432B9A7FC30CFF2A3312FE7A9BE508BA85A3C9895EEEF78E6F8D7C1A5F
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  <PACKAGE_ROOT>/work/github_release_20261
+> 018/github_full_exact_20261018.log
+  log type:  text
+ opened on:  18 Oct 2026, 21:44:02
+
+. 
+. * GitHub REPLIC~1.DTA, copied byte-for-byte; source data stay read-only.
+. use "<PACKAGE_ROOT>/tests/github_replay_7053da4/Rep
+> licate_data_MissingRDPatent_ML.dta", clear
+(data-file author redacted)
+
+. sort PERMCO fyear
+
+. xtset PERMCO fyear
+
+Panel variable: PERMCO (unbalanced)
+ Time variable: fyear, 1975 to 2000, but with gaps
+         Delta: 1 unit
+
+. 
+. * Model locals and options transcribed from GitHub REPLIC~1.DO.
+. local innov_used "lnnpatent"
+
+. local rd_used "RDAT"
+
+. local ctrl "lnME RD_missing lnAge lnK2L TobinQ ROA Leverage CASHAT KZidx  Ins
+> tOwn oms_HHidx oms_HHidx_square"
+
+. 
+. timer clear 1
+
+. timer on 1
+
+. sparse_poreg `innov_used' `rd_used' `ctrl', controls(i.PERMCO i.fyear) vce(cl
+> uster PERMCO) selection(bic, gridminok) rseed(1103) backend(official)
+
+Estimating lasso for lnnpatent using BIC
+Estimating lasso for RDAT using BIC
+Estimating lasso for lnME using BIC
+Estimating lasso for RD_missing using BIC
+Estimating lasso for lnAge using BIC
+Estimating lasso for lnK2L using BIC
+Estimating lasso for TobinQ using BIC
+Estimating lasso for ROA using BIC
+Estimating lasso for Leverage using BIC
+Estimating lasso for CASHAT using BIC
+Estimating lasso for KZidx using BIC
+Estimating lasso for InstOwn using BIC
+Estimating lasso for oms_HHidx using BIC
+Estimating lasso for oms_HHidx_square using BIC
+
+Partialing-out linear model          Number of obs                =     86,341
+                                     Number of controls           =     11,570
+                                     Number of selected controls  =      1,241
+                                     Wald chi2(13)                =     965.18
+                                     Prob > chi2                  =     0.0000
+
+                            (Std. err. adjusted for 11,544 clusters in PERMCO)
+------------------------------------------------------------------------------
+             |               Robust
+   lnnpatent | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        RDAT |   .1986367   .0181304    10.96   0.000     .1631018    .2341716
+        lnME |   .0335335    .003827     8.76   0.000     .0260328    .0410342
+  RD_missing |  -.1505958    .008657   -17.40   0.000    -.1675632   -.1336284
+       lnAge |   .0555046    .005905     9.40   0.000      .043931    .0670781
+       lnK2L |   .0057017   .0025703     2.22   0.027     .0006641    .0107394
+      TobinQ |   .0037628   .0027739     1.36   0.175     -.001674    .0091996
+         ROA |   .0292851    .021676     1.35   0.177    -.0131991    .0717693
+    Leverage |  -.0545895   .0183714    -2.97   0.003    -.0905969   -.0185821
+      CASHAT |   .0747047   .0238717     3.13   0.002     .0279169    .1214924
+       KZidx |   .0000725   .0003324     0.22   0.827     -.000579    .0007241
+     InstOwn |   .0052065   .0251366     0.21   0.836    -.0440604    .0544733
+   oms_HHidx |   .2885061   .0550278     5.24   0.000     .1806537    .3963586
+oms_HHidx_~e |  -.2500799   .0492933    -5.07   0.000    -.3466931   -.1534668
+------------------------------------------------------------------------------
+Note: Chi-squared test is a Wald test of the coefficients of the variables
+      of interest jointly equal to zero. Lassos select controls for model
+      estimation. Type lassoinfo to see number of selected variables in each
+      lasso.
+Note: Lassos are performed accounting for clusters in PERMCO.
+
+. timer off 1
+
+. display as result "GITHUB_FULL_EXACT_PO_RESULT b_RDAT=" %21.15g _b[RDAT] " se
+> _RDAT=" %21.15g _se[RDAT] " N=" %12.0f e(N)
+GITHUB_FULL_EXACT_PO_RESULT b_RDAT=     .198636660737012 se_RDAT=    .018130383
+> 0385999 N=       86341
+
+. estimates save "<PACKAGE_ROOT>/work/github_release_
+> 20261018/github_full_exact_po.ster", replace
+file <PACKAGE_ROOT>/work/github_release_20261018/gith
+> ub_full_exact_po.ster saved
+extended file <PACKAGE_ROOT>/work/github_release_2026
+> 1018/github_full_exact_po.ster.stxer saved
+
+. timer list 1
+   1:  21739.12 /        1 =   21739.1200
+
+. display as result "GITHUB_FULL_EXACT_PO_COMPLETE"
+GITHUB_FULL_EXACT_PO_COMPLETE
