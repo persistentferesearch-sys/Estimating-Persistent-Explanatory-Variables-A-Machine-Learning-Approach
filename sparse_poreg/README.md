@@ -78,7 +78,7 @@ display as result _newline "PASS: the official and fast Mata results agree."
 
 ```
 
-## Your first model
+## R\&D-Patent relation
 
 Suppose `lnnpatent` is the outcome, `RDAT` is the variable whose coefficient you want, and `PERMCO` and `fyear` identify firms and years:
 
