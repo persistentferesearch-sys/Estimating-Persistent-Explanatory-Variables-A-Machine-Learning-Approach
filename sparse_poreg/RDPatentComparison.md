@@ -2,14 +2,14 @@
 
 This page gives the **exact linear PRL and XPO commands** used for the public-data comparison. Start with the shorter [README](README.md) if you are installing the package for the first time.
 
-The dataset is [REPLIC~1.DTA](../REPLIC~1.DTA) in this repository. The recorded comparison used Stata 19, 86,341 observations, 11,544 firm clusters, BIC with `gridminok`, and seed 1103. The data were sorted by `PERMCO fyear` before estimation. XPO used five observation folds. No source data were changed.
+The dataset is [Replicate_data_MissingRDPatent_ML.dta](../Replicate_data_MissingRDPatent_ML.dta) in this repository. The recorded comparison used Stata 19, 86,341 observations, 11,544 firm clusters, BIC with `gridminok`, and seed 1103. The data were sorted by `PERMCO fyear` before estimation. XPO used five observation folds. No source data were changed.
 
 ## 1. Load the data and define the variables
 
 From the `sparse_poreg` folder in the downloaded repository:
 
 ```stata
-use "../REPLIC~1.DTA", clear
+use "../Replicate_data_MissingRDPatent_ML.dta", clear
 sort PERMCO fyear
 local y lnnpatent
 local x RDAT lnME RD_missing lnAge lnK2L TobinQ ROA Leverage ///

@@ -72,10 +72,10 @@ For the paper-style five-fold XPO comparison, folds split **observations**, even
 
 ## 5. Run the paper's public RD patent example
 
-The paper's [public data](../REPLIC~1.DTA) are in the parent folder of `sparse_poreg` in the downloaded repository. With the working directory still set to `sparse_poreg`, run:
+The paper's [public data](../Replicate_data_MissingRDPatent_ML.dta) are in the parent folder of `sparse_poreg` in the downloaded repository. With the working directory still set to `sparse_poreg`, run:
 
 ```stata
-use "../REPLIC~1.DTA", clear
+use "../Replicate_data_MissingRDPatent_ML.dta", clear
 sort PERMCO fyear
 local y lnnpatent
 local x RDAT lnME RD_missing lnAge lnK2L TobinQ ROA Leverage ///
