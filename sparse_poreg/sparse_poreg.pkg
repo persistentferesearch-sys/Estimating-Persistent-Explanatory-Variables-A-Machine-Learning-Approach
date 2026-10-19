@@ -1,7 +1,7 @@
 v 3
 d sparse_poreg and sparse_xporeg, version 0.8.4-rc14.
 d Official-first partialing-out lasso with a sparse Mata large-design path.
-d Includes experimental Python/DoubleML LassoCV and multiway-cluster examples.
+d Includes official and sparse Mata linear estimators and public examples.
 d Distribution-Date: 20260722
 d Requires Stata 16 or newer; official-parity evidence uses Stata 19.
 f stata/sparse_poreg.ado
@@ -13,12 +13,9 @@ f stata/_sparse_estat.ado
 f stata/_sparse_native_guard.ado
 f stata/_sparse_official_route.ado
 f stata/_sparse_prl_xpo_mata.ado
-f stata/_sparse_python_paths.ado
 f stata/_sparse_route_post.ado
-F python/sparse_prl_xpo_backend.py
-F python/requirements-experimental.txt
-F python/example_multiway_cluster.py
 F tests/validate_public_examples.do
 F tests/finance_quickstart.do
-F START_HERE_FOR_COAUTHORS.txt
+F README.md
+F LICENSE
 e

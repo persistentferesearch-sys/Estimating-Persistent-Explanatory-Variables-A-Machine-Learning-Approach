@@ -1,145 +1,108 @@
+﻿# Sparse partialing-out for empirical finance
 
-# Sparse partialing-out for empirical finance
+This Stata package offers two **linear** estimators for studies with many possible controls or firm and year indicators:
 
-This Stata package helps estimate the association between a variable of interest—such as R&D spending—and an outcome such as patenting, while selecting from many possible controls and firm or year indicators.
+- `sparse_poreg`: partialing-out lasso (PRL).
+- `sparse_xporeg`: cross-fitted partialing-out lasso (XPO/DML).
 
-The two main commands estimate **linear models**:
+Each command can run Stata's official estimator or the package's sparse Mata calculation. The examples below use R&D spending and patenting, but you can replace those variables with your own outcome, variable of interest, controls, and cluster ID.
 
-- `sparse_poreg` uses partialing-out lasso (PRL).
-- `sparse_xporeg` uses cross-fitted partialing-out lasso (XPO/DML).
+## 1. Download and install
 
-Both can call Stata’s official estimator or use this package’s sparse Mata implementation. A separate **Poisson command**, `sparse_popoisson`, is under development for count outcomes.
-
-## Install and try it
-
-Download and extract the package. In Stata, change the working directory to the extracted folder—the one containing `stata.toc`—then run:
+1. On [this repository's main page](https://github.com/persistentferesearch-sys/Estimating-Persistent-Explanatory-Variables-A-Machine-Learning-Approach), select **Code > Download ZIP** and extract it.
+2. Open Stata 19. Choose **File > Change Working Directory** and select the extracted `sparse_poreg` folder. You should see `stata.toc` and `sparse_poreg.pkg` there.
+3. Copy these lines into Stata:
 
 ```stata
 net install sparse_poreg, from("`c(pwd)'") replace
+which sparse_poreg
+which sparse_xporeg
+```
+
+The two `which` commands should show installed `.ado` files. Installation does not change the paper's dataset.
+
+## 2. Try the finance quick start
+
+Run the included example:
+
+```stata
 do "tests/finance_quickstart.do"
 ```
 
-The quick start creates artificial firm-year data. It runs the official and Mata routes on the same R&D–patent example and prints `PASS` if their coefficient and standard error agree. It does not use your research data or require Python.
+It creates artificial firm-year data, estimates a simple R&D–patent relationship, and compares the official and sparse Mata PRL routes. A successful run ends with **`PASS: the official and fast Mata results agree.`** You do not need to download research data for this step. The [quick-start source](tests/finance_quickstart.do) shows exactly how the artificial data and both estimates are created.
 
-The package requires Stata 16 or newer. The comparisons described below were run in Stata 19.
+## 3. Understand the command
 
-## Quick start
-```stata
-* finance_quickstart.do
-version 19.0
-clear all
-set more off
-args package_root
-if trim(`"`package_root'"') != "" {
-    local package_root = subinstr(`"`package_root'"', "\", "/", .)
-    adopath ++ "`package_root'/stata"
-}
-capture which sparse_poreg
-if _rc {
-    display as error "sparse_poreg is not installed; follow START_HERE_FOR_COAUTHORS.txt"
-    exit 111
-}
-
-* Artificial firm-year data; no private or real research data are used.
-set seed 1103
-set obs 1000
-generate long observation = _n
-generate int firm = ceil(_n/10)
-generate int year = 2000 + mod(_n - 1, 10)
-generate double size = rnormal()
-generate double cash = rnormal()
-generate double leverage = rnormal()
-generate double rd = .40*size + .20*cash + rnormal()
-generate double patents = .20*rd + .30*size - .10*leverage + ///
-    .15*sin(firm) + .05*(year - 2000) + rnormal()
-
-local model patents rd, absorb(firm year) controls(size cash leverage) ///
-    selection(bic, gridminok) vce(cluster firm)
-
-* On this small example, auto uses official Stata.
-quietly sparse_poreg `model' backend(auto)
-scalar b_auto = _b[rd]
-scalar se_auto = _se[rd]
-
-* The same model using the package's fast large-fixed-effect route.
-sort observation, stable
-quietly sparse_poreg `model' backend(mata) strict(stata)
-scalar b_mata = _b[rd]
-scalar se_mata = _se[rd]
-
-display as text _newline "Simple R&D-patent example"
-display as text "---------------------------------------------"
-display as text "Small-data official route: coefficient = " ///
-    as result %8.4f b_auto as text ", SE = " as result %8.4f se_auto
-display as text "Fast Mata route:           coefficient = " ///
-    as result %8.4f b_mata as text ", SE = " as result %8.4f se_mata
-
-assert abs(b_auto - b_mata) < 1e-8
-assert abs(se_auto - se_mata) < 1e-8
-display as result _newline "PASS: the official and fast Mata results agree."
-
-```
-
-## R\&D-Patent relation
-
-Suppose `lnnpatent` is the outcome, `RDAT` is the variable whose coefficient you want, and `PERMCO` and `fyear` identify firms and years:
+For a model with one main variable of interest:
 
 ```stata
 sparse_poreg lnnpatent RDAT, ///
     absorb(PERMCO fyear) ///
     controls(lnME lnAge TobinQ ROA Leverage) ///
-    vce(cluster PERMCO) ///
-    selection(bic, gridminok) ///
+    selection(bic, gridminok) vce(cluster PERMCO) ///
     backend(auto)
 ```
 
-Here, `RDAT` receives a reported coefficient and standard error. The variables in `controls()` are **candidates for selection**. `absorb(PERMCO fyear)` makes the observed firm and year indicator levels candidates too; it is not the same instruction as absorbing fixed effects in an ordinary within regression. `vce(cluster PERMCO)` clusters standard errors by firm.
+`lnnpatent` is the outcome. `RDAT` receives a reported coefficient and standard error. The financial variables in `controls()` are **candidates for selection**. `absorb(PERMCO fyear)` makes the observed firm and year indicator levels candidates too; it does not perform an ordinary within fixed-effect transformation. `vce(cluster PERMCO)` clusters standard errors by firm.
 
-Every variable placed between the outcome and the comma is a variable of interest and receives its own coefficient. If you want only the R&D coefficient, put the other financial variables in `controls()`, as above.
+**Every variable between the outcome and the comma gets its own coefficient.** If you want only the RDAT coefficient, put your other explanatory variables in `controls()`, as in this illustration. This one-target illustration is different from the paper's published multi-target specification below.
 
-For cross-fitted XPO, add a fold count and seed:
+For cross-fitted XPO, use the same model and specify the folds:
 
 ```stata
 sparse_xporeg lnnpatent RDAT, ///
     absorb(PERMCO fyear) ///
     controls(lnME lnAge TobinQ ROA Leverage) ///
-    vce(cluster PERMCO) ///
-    selection(bic, gridminok) ///
-    xfolds(5) rseed(1103) ///
-    backend(auto)
+    selection(bic, gridminok) vce(cluster PERMCO) ///
+    xfolds(5) rseed(1103) backend(auto)
 ```
 
-With `backend(auto)`, XPO uses official Stata when the expanded design fits. It will not silently switch to the experimental Mata XPO route.
+## 4. Choose a route
 
-## Which route should I choose?
-
-| Goal | Option |
+| Your goal | Use |
 |---|---|
-| Start a routine analysis | `backend(auto)` |
-| Reproduce Stata’s official command through this package | `backend(official)` |
-| Compare the sparse calculation with official Stata on a manageable design | `backend(mata) strict(stata)` |
-| Run a very large linear PRL design with sparse safety checks | `backend(mata) strict(production)` |
-| Deliberately run sparse XPO | `backend(mata) frontierok strict(stata)` for a parity comparison, or `strict(production)` for the scalable route |
+| Begin a routine model | `backend(auto)` |
+| Run the official Stata estimator through this package | `backend(official)` |
+| Compare Mata with official Stata on a manageable design | `backend(mata) strict(stata)` for PRL; add `frontierok` for XPO |
+| Run a very large sparse PRL design with native safety checks | `backend(mata) strict(production)` |
 
-`strict(stata)` is an option **within** the Mata backend. It is intended for comparisons with Stata’s selection conventions. `strict(production)` avoids some dense official screening and applies the package’s production checks; it should not be described as universally identical to official Stata.
+`backend(auto)` uses official Stata for a manageable design. For XPO, it stops if official expansion is too large; choose sparse XPO explicitly with `backend(mata) frontierok`. `strict(stata)` is Mata's comparison mode. `strict(production)` uses a different, more scalable screening contract, so it is not a promise of identical estimates.
 
-Sparse XPO requires `frontierok` because that route remains experimental. For the official-style comparisons here, its five folds split **observations**, even when standard errors are clustered by firm. Researchers who need whole firms kept together across training and holdout samples should consult `help sparse_xporeg` for `foldcluster()`; that is a different design.
+For the paper-style five-fold XPO comparison, folds split **observations**, even with firm-clustered standard errors. If the research design requires whole firms kept out of each training fold, read `help sparse_xporeg` about `foldcluster()`: that is a different analysis.
 
-## A comparison using the paper’s public data
+## 5. Run the paper's public RD patent example
 
-The package was also checked against the [paper’s public replication data](https://github.com/persistentferesearch-sys/persistent_fe_remendy). The published specification treats R&D and 12 other variables as variables of interest, selects among firm and year indicators, clusters by firm, and uses BIC. XPO uses five folds.
+The paper's [public data](../REPLIC~1.DTA) are in the parent folder of `sparse_poreg` in the downloaded repository. With the working directory still set to `sparse_poreg`, run:
 
-| Model | Official result for RDAT | Sparse Mata result for RDAT |
+```stata
+use "../REPLIC~1.DTA", clear
+sort PERMCO fyear
+local y lnnpatent
+local x RDAT lnME RD_missing lnAge lnK2L TobinQ ROA Leverage ///
+    CASHAT KZidx InstOwn oms_HHidx oms_HHidx_square
+
+* Linear PRL using sparse Mata.
+sparse_poreg `y' `x', absorb(PERMCO fyear) ///
+    vce(cluster PERMCO) selection(bic, gridminok) rseed(1103) ///
+    backend(mata) strict(stata)
+
+* Cross-fitted linear XPO using five folds.
+sparse_xporeg `y' `x', absorb(PERMCO fyear) ///
+    vce(cluster PERMCO) selection(bic, gridminok) ///
+    xfolds(5) rseed(1103) backend(mata) frontierok strict(stata)
+```
+
+Here, **all 13 variables in `x` are targets**; each receives a coefficient. Firm and year indicators are candidate controls. These are substantial fits, especially XPO, so try the artificial quick start first. The data loaded with `use` are read from the repository; the commands above do not save changes to that file.
+
+The published official and package Mata results for RDAT are:
+
+| Linear model | Published official coefficient (SE) | Package Mata coefficient (SE) |
 |---|---:|---:|
-| Linear PRL coefficient | 0.1986367 | 0.198636660737147 |
-| Linear PRL cluster SE | 0.0181304 | 0.0181303830386044 |
-| Linear XPO coefficient | 0.2131053 | 0.213105298267939 |
-| Linear XPO cluster SE | 0.0136054 | 0.0136053698613053 |
+| PRL | 0.1986367 (0.0181304) | 0.198636660737147 (0.0181303830386044) |
+| XPO | 0.2131053 (0.0136054) | 0.213105298267939 (0.0136053698613053) |
 
-The Mata PRL fit also matched the **local official fit** across all 13 coefficients and the full covariance matrix to numerical precision. On that machine, Mata PRL took about 8 minutes and the local official fit about 6 hours. The Mata XPO fit matches all 13 coefficient and standard-error pairs **as printed in the published official log**. Because that log rounds the numbers, it does not establish full-precision XPO covariance equality, and it does not provide a comparable official XPO estimation timer.
+The PRL result also has a local full-precision official-versus-Mata check. The XPO comparison matches the published values **at their printed precision**. See [RDPatentComparison.md](RDPatentComparison.md) for the exact official commands, all comparison details, and the saved logs. Matching this example does not guarantee identical results after changing the data, design, variable order, or selection rule.
 
-The commands, data preparation, and evidence are in [RDPatentComparison.md](RDPatentComparison.md). These results concern this recorded specification; changing the sample, variable order, indicator coding, selection rule, or folds may change the comparison.
+## More help
 
-
-
-This is an independent third-party package, not affiliated with or endorsed by StataCorp LLC. The package code is distributed under the MIT license.
+In Stata, type `help sparse_poreg` or `help sparse_xporeg`. The package is independent third-party software, not affiliated with or endorsed by StataCorp LLC. Its code is distributed under the [MIT license](LICENSE).

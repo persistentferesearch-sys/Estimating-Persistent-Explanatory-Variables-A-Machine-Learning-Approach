@@ -1,0 +1,3 @@
+v 3
+d sparse_poreg: linear partialing-out lasso with official and sparse Mata routes
+p sparse_poreg Partialing-out and cross-fitted linear estimators

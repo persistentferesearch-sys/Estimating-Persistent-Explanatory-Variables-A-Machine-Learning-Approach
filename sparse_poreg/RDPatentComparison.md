@@ -1,85 +1,94 @@
+﻿# RD patent example: official Stata and sparse Mata
 
-This file shows the replicate the examples used in the paper using sparse_po and sparse_xpo commands. 
-# sparse_poreg 0.8.4-rc14: linear PRL and XPO
+This page gives the **exact linear PRL and XPO commands** used for the public-data comparison. Start with the shorter [README](README.md) if you are installing the package for the first time.
 
-This independent Stata package provides `sparse_poreg` (linear post-regularization/PRL) and `sparse_xporeg` (linear cross-fit partialing-out/DML). 
+The dataset is [REPLIC~1.DTA](../REPLIC~1.DTA) in this repository. The recorded comparison used Stata 19, 86,341 observations, 11,544 firm clusters, BIC with `gridminok`, and seed 1103. The data were sorted by `PERMCO fyear` before estimation. XPO used five observation folds. No source data were changed.
 
-## Install
+## 1. Load the data and define the variables
 
-Extract the ZIP. In Stata, change directory to the extracted folder containing `sparse_poreg.pkg` and run:
-
-```stata
-net install sparse_poreg, from("`c(pwd)'") replace
-which sparse_poreg
-which sparse_xporeg
-do "tests/finance_quickstart.do"
-```
-
-The commands require Stata 16 or newer; the empirical logs here used Stata 19. The quick check uses generated data and Stata 19. The optional Python backend has separate requirements in `python/requirements-experimental.txt`.
-
-## Paper's public linear example: sparse Mata first
-
-Download `REPLIC~1.DTA` from the [paper replication repository](https://github.com/persistentferesearch-sys/persistent_fe_remendy), then run:
+From the `sparse_poreg` folder in the downloaded repository:
 
 ```stata
-use "C:/path/to/REPLIC~1.DTA", clear
+use "../REPLIC~1.DTA", clear
 sort PERMCO fyear
 local y lnnpatent
 local x RDAT lnME RD_missing lnAge lnK2L TobinQ ROA Leverage ///
     CASHAT KZidx InstOwn oms_HHidx oms_HHidx_square
+```
 
-* Sparse Mata PRL/PO, parity-oriented mode.
+Every variable in `x` is a **target with its own reported coefficient**. Firm and year indicators are selection controls. This reproduces the paper's multi-target design; moving the other 12 variables into `controls()` would estimate a different specification.
+
+## 2. Linear PRL: official and Mata commands
+
+The paper's direct official Stata command is:
+
+```stata
+poregress `y' `x', controls(i.PERMCO i.fyear) ///
+    vce(cluster PERMCO) selection(bic, gridminok) rseed(1103)
+```
+
+The same official estimator can be called through this package:
+
+```stata
+sparse_poreg `y' `x', controls(i.PERMCO i.fyear) ///
+    vce(cluster PERMCO) selection(bic, gridminok) rseed(1103) ///
+    backend(official)
+```
+
+For the sparse Mata calculation, run:
+
+```stata
 sparse_poreg `y' `x', absorb(PERMCO fyear) ///
     vce(cluster PERMCO) selection(bic, gridminok) rseed(1103) ///
     backend(mata) strict(stata)
-
-* Sparse Mata DML/XPO, experimental frontier.
-sparse_xporeg `y' `x', absorb(PERMCO fyear) ///
-    vce(cluster PERMCO) selection(bic, gridminok) rseed(1103) ///
-    xfolds(5) backend(mata) frontierok strict(stata)
 ```
 
-The `x` variables are variables of interest. Firm/year indicators are selection controls. The copy-ready [Mata do-file](examples/github_rdpatent_mata_prl_xpo.do) runs both commands. For clustered BIC PRL, this release rejects `frontierok`; the successful PRL run used `backend(mata) strict(stata)`. The XPO route requires `frontierok`. That flag is an experimental-route acknowledgement, not an accuracy setting.
+Do not add `frontierok` to this clustered BIC PRL command; this release rejects it here. `strict(stata)` requests the Mata comparison mode.
 
-To run the exact official Stata routes through this package, use `controls(i.PERMCO i.fyear)` with `backend(official)` in place of `absorb(...)` and `backend(mata) ...`. The earlier [official comparison do-file](examples/github_rdpatent_linear_po_xpo.do) includes those commands. Direct official Stata commands are `poregress` and `xporegress` with the same model options. Full official fits can take hours.
+## 3. Linear XPO: official and Mata commands
 
-# Public-data linear PRL/XPO comparison
-
-Source: the [paper's public repository](https://github.com/persistentferesearch-sys/persistent_fe_remendy), its `REPLIC~1.DO` and `REPLIC~1.DTA`, and the published linear PRL/XPO logs. Local package fits used a byte-identical data copy, sorted by `PERMCO fyear`, with Stata 19, 86,341 observations, 11,544 firm clusters, BIC with `gridminok`, and seed 1103. XPO used five observation folds. No source data were changed.
-
-After `use "C:/path/to/REPLIC~1.DTA", clear` and `sort PERMCO fyear`, define:
+The paper's direct official Stata command is:
 
 ```stata
-local y lnnpatent
-local x RDAT lnME RD_missing lnAge lnK2L TobinQ ROA Leverage ///
-    CASHAT KZidx InstOwn oms_HHidx oms_HHidx_square
+xporegress `y' `x', controls(i.PERMCO i.fyear) ///
+    vce(cluster PERMCO) xfolds(5) rseed(1103) ///
+    selection(bic, gridminok)
 ```
 
-| Route | Stata command | RDAT coefficient | Cluster SE | Timing evidence |
-|---|---|---:|---:|---:|
-| [Published official PRL](../ReplicateLog_Results/REPLIC~4.SMC) ([table](../ReplicateLog_Results/PRL_LI~1.CSV)) | ``poregress `y' `x', controls(i.PERMCO i.fyear) vce(cluster PERMCO) selection(bic, gridminok) rseed(1103)`` | 0.1986367 | 0.0181304 | 4,201 s (1 h 10 m 1 s; log window) |
-| Package official PRL | ``sparse_poreg `y' `x', controls(i.PERMCO i.fyear) vce(cluster PERMCO) selection(bic, gridminok) rseed(1103) backend(official)`` | 0.198636660737012 | 0.0181303830385999 | 21,739.120 s (6.04 h; local Stata timer) |
-| Package Mata PRL | ``sparse_poreg `y' `x', absorb(PERMCO fyear) vce(cluster PERMCO) selection(bic, gridminok) rseed(1103) backend(mata) strict(stata)`` | 0.198636660737147 | 0.0181303830386044 | 477.897 s (7.97 min; local Stata timer) |
-| [Published official DML/XPO](../ReplicateLog_Results/REPLIC~1.SMC) ([table](../ReplicateLog_Results/DML_LI~1.CSV)) | ``xporegress `y' `x', controls(i.PERMCO i.fyear) vce(cluster PERMCO) xfolds(5) rseed(1103) selection(bic, gridminok)`` | 0.2131053 | 0.0136054 | 12,986 s (3 h 36 m 26 s; log window) |
-| Package Mata DML/XPO | ``sparse_xporeg `y' `x', absorb(PERMCO fyear) vce(cluster PERMCO) xfolds(5) rseed(1103) selection(bic, gridminok) backend(mata) frontierok strict(stata)`` | 0.213105298267939 | 0.0136053698613053 | 2,107.911 s (35.13 min; local Stata timer) |
+The package's official route calls the same estimator:
 
-The published PRL log opened at 09:46:49 and closed at 10:56:50 on 7 February 2025; the published XPO log opened at 10:56:50 and closed at 14:33:16. The resulting 4,201-second and 12,986-second intervals are **log windows**, not estimation timers. They include any commands around estimation and possible idle time. The local package figures are Stata timer outputs from a different machine, so these columns should not be treated as a cross-machine speed benchmark.
+```stata
+sparse_xporeg `y' `x', controls(i.PERMCO i.fyear) ///
+    vce(cluster PERMCO) xfolds(5) rseed(1103) ///
+    selection(bic, gridminok) backend(official)
+```
 
-With the data loaded and sorted and the y/x locals defined above, each table command is complete and copyable. All x variables are variables of interest; firm/year indicators are selection controls. The official backend delegates to Stata's poregress/xporegress. In clustered BIC PRL, frontierok is rejected by rc14; the completed PRL run did not use it. XPO requires that flag.
+The recorded sparse Mata command is:
 
-**PRL parity:** the local official and Mata saved estimates have identical coefficient names/order. Across all 13 coefficients, maximum absolute difference is `1.35197408823728e-13`; across all entries of the 13-by-13 covariance matrix, `2.08904074594507e-15`. Both pass a `1e-10` threshold. The published official PRL result matches the displayed values. Mata PRL was 45.5 times faster on this machine.
+```stata
+sparse_xporeg `y' `x', absorb(PERMCO fyear) ///
+    vce(cluster PERMCO) xfolds(5) rseed(1103) ///
+    selection(bic, gridminok) backend(mata) frontierok strict(stata)
+```
 
-**XPO parity:** the complete Mata run matches all 13 coefficient/SE pairs in the paper's official DML log exactly **as printed**. N, cluster count, 11,570 controls, 1,737 selected controls, and five folds also match. `results/XPO_published_parity_audit.json` records every pair. The published log rounds results, so this does not establish equality of full-precision estimates or the covariance matrix. No official-versus-Mata XPO speed ratio is available from these logs. `frontierok` remains required for Mata XPO.
+`frontierok` is required for the experimental Mata XPO route; it does not disable safety checks. These five folds split observations. Firm-clustered standard errors do **not** mean that entire firms are held out from the training folds.
 
-`absorb(PERMCO fyear)` builds all observed indicator levels, whereas the paper specifies base-omitted `i.PERMCO i.fyear`. That distinction can matter on other samples; `strict(stata)` alone does not guarantee parity for arbitrary data. The claims above are confined to this dataset and the recorded checks.
+## 4. Compare the results
 
-## Included evidence and source binding
+| Route | RDAT coefficient | Cluster standard error | Timing evidence |
+|---|---:|---:|---:|
+| [Published official PRL](../ReplicateLog_Results/REPLIC~4.SMC) | 0.1986367 | 0.0181304 | Published log window; not an estimator timer |
+| Package official PRL | 0.198636660737012 | 0.0181303830385999 | 21,739.120 seconds, local Stata timer |
+| Package Mata PRL | 0.198636660737147 | 0.0181303830386044 | 477.897 seconds, local Stata timer |
+| [Published official XPO](../ReplicateLog_Results/REPLIC~1.SMC) | 0.2131053 | 0.0136054 | Published log window; not an estimator timer |
+| Package Mata XPO | 0.213105298267939 | 0.0136053698613053 | 2,107.911 seconds, local Stata timer |
 
-- `results/PRL_package_official_complete.log`: completed anonymized package official-backend PRL log.
-- `results/PRL_saved_matrix_parity_audit.log`: saved-estimate coefficient-name, coefficient, and full covariance parity check for local official versus Mata PRL.
-- `results/PO_XPO_package_mata_complete.log`: complete anonymized package Mata PRL and XPO log.
-- `results/PRL_published_official_GitHub.smcl`, `results/XPO_published_official_GitHub.smcl`: the paper's official Stata logs, with only their original log-directory string redacted. These are **published reference** results. The adjacent CSV files are the paper's rounded tables.
-- `results/XPO_published_parity_audit.json`: each published XPO coefficient/SE versus the complete Mata run, at displayed precision.
+The local **PRL** official and Mata saved estimates have the same coefficient names and order. Across all 13 coefficients, their maximum absolute difference is `1.35197408823728e-13`; across every entry of the 13-by-13 covariance matrix, it is `2.08904074594507e-15`. The Mata PRL fit was approximately 45.5 times faster than the local official fit on that machine. See the [saved-matrix audit](results/PRL_saved_matrix_parity_audit.log).
 
-Current GitHub Git blob IDs verified at packaging: do-file `9376e2a83ab1dfd80c906308e0d54a1e910d747a`; data `c5bac67e3d494622d8220b0d376649026b27dbbe`; official PRL log `2040b8e9e7aec649b43c96fe5b8395d9d50b287d` (`REPLIC~4.SMC`); official XPO log `305714f5a460ac3d84b332647b0030be01b3588b` (`REPLIC~1.SMC`). The local source do-file/data copies matched those blobs. This comparison concerns **linear** models only; the paper's Poisson commands and the separate sparse Poisson development command are outside this ZIP.
+The completed **Mata XPO** fit matches all 13 coefficient and standard-error pairs **as printed** in the paper's official log. See the [pair-by-pair audit](results/XPO_published_parity_audit.json). The published log rounds the numbers, so this comparison does **not** establish equality of full-precision XPO coefficients or the complete covariance matrix. It also does not give a reliable official-versus-Mata XPO speed ratio.
 
+The official results are also summarized in the paper's [PRL table](../ReplicateLog_Results/PRL_LI~1.CSV) and [XPO table](../ReplicateLog_Results/DML_LI~1.CSV). Completed package logs are [official PRL](results/PRL_package_official_complete.log) and [Mata PRL/XPO](results/PO_XPO_package_mata_complete.log). The reference logs saved with this package are [PRL](results/PRL_published_official_GitHub.smcl) and [XPO](results/XPO_published_official_GitHub.smcl).
+
+## What this comparison establishes
+
+The official commands use base-omitted `i.PERMCO i.fyear`; the Mata commands build all observed levels using `absorb(PERMCO fyear)`. That distinction can matter in another dataset. For a meaningful comparison, hold the sample, sort order, target list, selection rule, VCE, seed, and fold count fixed. The numerical statements above apply to this recorded public-data example, not every possible design.
