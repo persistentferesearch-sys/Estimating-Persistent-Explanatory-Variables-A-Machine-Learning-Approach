@@ -1,65 +1,80 @@
 # Estimating Persistent Explanatory Variables: A Machine Learning Approach
-The repository provides detailed examples and code that follow the paper *Estimating Persistent Explanatory Variables: A Machine Learning Approach*. 
 
-In this set of code, we demonstrate how users can implement the following four ways to identify the potential bias from fixed effects regressions: 
-  1. Linear regression and Poisson regression with and without firm FEs
-  2. Within, Between, and Overall R-squared
-  2. Adjusted Hausman-Taylor approach
-  4. Post-regularization LASSO (PRL) and Double Machine Learning (DML) methods for both linear and Poisson regression
-  5. Sparse-Poreg folder with codes and examples for the Stata `Mata`-based commands implementing PRL and DML. 
+This repository contains the public data, Stata code, and saved results for *Estimating Persistent Explanatory Variables: A Machine Learning Approach*.
 
-## Data and Code Availability:
-We have prepared the following documents:
-  1. `Replicate_code_MissingRDPatent_ML.do` contains the STATA code that produces our main results in the paper;
-  2. `Replicate_data_MissingRDPatent_ML.dta` contains the dataset used in the paper.
-  3. `panelr2.ado` calculates overall, between, and within R-squared after estimation.
- 
-**Sample Data Construction**
-* PERMCO here is a masked firm identifier.
-* Variable definitions are as follows, and interested readers are referred to our paper and the original data sources to collect them.
-  - patent:     Number of patents (data from USPTO PatentsView)
-  - lnnpatent:  The logarithm of one plus the number of patents (data from USPTO PatentsView)
-  - RDAT:       Research and development (R&D) expenses scaled by the total assets (data from Compustat)
-  - lnME:       The logarithm of market equity (data from CRSP)  
-  - RD_missing: A binary variable indicating that R&D expenses are missing (data from Compustat)
-  - lnAge:      The logarithm of years where a firm exists in Compustat (data from Compustat)
-  - lnK2L:      The logarithm of net property, plant, and equipment divided by the number of employees(data from Compustat)
-  - TobinQ:      The market value of a firm divided by its replacement cost (data from Compustat and CRSP)
-  - ROA:        Return on assets (data from Compustat)
-  - Leverage:   Long-term debt plus current debt, divided by total assets (data from Compustat)
-  - CASHAT:    Cash to the total assets  (data from Compustat)
-  - KZidx:      The financial constraint index (data from Compustat)
-  - Instown:    The total institutional ownership from 13f filings divided by the total number of shares outstanding (data from CRSP and Thomson/Refinitiv)
-  - oms_HHidx:  One minus the Herfindahl-Hirschman index (HHI) based on three-digit industry classification (data from Compustat)
-  - oms_HHidx_square: Square of oms_HHidx (data from Compustat)
+The paper's replication code covers four approaches:
+
+1. Linear and Poisson regressions with and without firm fixed effects
+2. Within, between, and overall R-squared
+3. The adjusted Hausman–Taylor approach
+4. Post-regularization LASSO (PRL) and double machine learning (DML)
+
+The [sparse_poreg folder](sparse_poreg/) is a separate Stata package for **linear** PRL and cross-fitted DML. Its [step-by-step guide](sparse_poreg/README.md) starts with artificial finance data and then shows the public R&D–patent example.
+
+## Data and code
+
+- [REPLIC~1.DO](REPLIC~1.DO) is the paper's replication script.
+- [REPLIC~1.DTA](REPLIC~1.DTA) is the public replication dataset.
+- [panelr2.ado](panelr2.ado) calculates overall, between, and within R-squared.
+- [ReplicateLog_Results](ReplicateLog_Results/) contains saved logs and results.
+- [sparse_poreg](sparse_poreg/) contains the separate linear Stata package.
+
+The uploaded script and dataset have abbreviated filenames on GitHub. The replication script still refers to the dataset by its original, longer name.
+
+## Reproduce the paper's results
+
+1. Select **Code → Download ZIP** above and extract the repository.
+2. Create a folder named `my_replication_output` inside the extracted repository. This keeps newly generated results separate from the saved results.
+3. Open `REPLIC~1.DO` in Stata's Do-file Editor. Near the top, replace its computer-specific `cd` command and data-loading command with the lines below. Replace the example path with the actual location of your extracted repository.
+
+   ```stata
+   cd "C:/path/to/repository/my_replication_output"
+   clear all
+   adopath ++ ".."
+   set maxvar 120000
+   use "../REPLIC~1.DTA", clear
+   ```
+
+4. Install the commands used by the script if they are missing: `reghdfe`, `ppmlhdfe`, and `estout` (which provides `estadd` and `esttab`).
+5. Run the edited do-file in Stata. It writes new logs and CSV results to `my_replication_output`.
+
+The supplied replication script specifies Stata 17 or later. Some models can take substantial time; the saved outputs in [ReplicateLog_Results](ReplicateLog_Results/) let you inspect the paper's results without rerunning every model.
+
+## Sample data construction
+
+`PERMCO` is a masked firm identifier. The following variable descriptions summarize the public data; see the paper and original data sources for further details.
+  - `patent`: Number of patents (USPTO PatentsView)
+  - `lnnpatent`: Logarithm of one plus the number of patents (USPTO PatentsView)
+  - `RDAT`: R&D expenses divided by total assets (Compustat)
+  - `lnME`: Logarithm of market equity (CRSP)
+  - `RD_missing`: Indicator that R&D expenses are missing (Compustat)
+  - `lnAge`: Logarithm of years a firm exists in Compustat
+  - `lnK2L`: Logarithm of net property, plant, and equipment divided by employees (Compustat)
+  - `TobinQ`: Firm market value divided by replacement cost (Compustat and CRSP)
+  - `ROA`: Return on assets (Compustat)
+  - `Leverage`: Long-term plus current debt divided by total assets (Compustat)
+  - `CASHAT`: Cash divided by total assets (Compustat)
+  - `KZidx`: Financial constraint index (Compustat)
+  - `InstOwn`: Institutional ownership divided by shares outstanding (CRSP and Thomson/Refinitiv)
+  - `oms_HHidx`: One minus the Herfindahl–Hirschman index based on three-digit industry classification (Compustat)
+  - `oms_HHidx_square`: Square of `oms_HHidx` (Compustat)
 
 
-**Results for Sample Data**
-* Depends on computer capacity; we also provide results and corresponding STATA log files.
-  * Log files:
-    - ReplicateLog_OLS_FE_adjHT
-    - ReplicateLog_PRL_Linear
-    - ReplicateLog_DML_Linear
-    - ReplicateLog_Poisson_FE
-    - ReplicateLog_PRL_Poisson
-    - ReplicateLog_DML_Poisson
-      
-  * csv files:
-    - FE_OLS_adjHT_estimates.csv
-    - PRL_Linear_estimates.csv
-    - DML_Linear_estimates.csv
-    - Poisson_FE_estimates.csv
-    - PRL_Poisson_estimates.csv
-    - DML_Poisson_estimates.csv
+## Saved results
 
-**Software**
-- The STATA version to fully implement the replicate code is: STATA 17.
-- The LASSO inference approaces: `poregress`, `xporegress`, `popoisson`, and `xpopoisson` are available since STATA 16.
-  The cluster standard error for those methods are only available since STATA 17. 
-  The robust standard error can still be used for those methods in STATA 16.
-- The following commands may need to be installed and updated on STATA to run the replicate code: `reghdfe`, `ppmlhdfe`, and `esttab`.
-- To export the R squared values correctly to a CSV file, copy `panelr2.ado` to `C:\Users\yourPC\ado\personal\` folder, and then update esttab by running `ssc install estout, replace` command in STATA.
-    
-## Contact
-**Please see the paper for more information. If you use these datasets, please CITE this paper as the data source.
+The [ReplicateLog_Results folder](ReplicateLog_Results/) contains the supplied Stata logs and CSV estimates for the linear, Poisson, PRL, and DML analyses. GitHub displays several uploaded files under abbreviated names. The replication script shows the descriptive output names it generates when run locally.
+
+## Try the linear sparse package
+
+You can try the package without running the full paper replication. Follow the [sparse_poreg installation guide](sparse_poreg/README.md), which includes a small artificial-data check and the public R&D–patent example. The detailed comparison with Stata's official linear commands is in [RDPatentComparison.md](sparse_poreg/RDPatentComparison.md).
+
+## Software
+
+The supplied paper replication script specifies Stata 17 or later and uses Stata's official `poregress`, `xporegress`, `popoisson`, and `xpopoisson` commands. It also calls `reghdfe`, `ppmlhdfe`, `estadd`, and `esttab`; install the corresponding community packages if they are not available. The relative `adopath` line above makes the included `panelr2.ado` available to that script.
+
+The separate [sparse_poreg package](sparse_poreg/) documents its own installation and requirements.
+
+## Citation
+
+Please cite *Estimating Persistent Explanatory Variables: A Machine Learning Approach* when using these data.
 
