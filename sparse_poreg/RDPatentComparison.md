@@ -1,7 +1,8 @@
 
+This file shows the replicate the examples used in the paper using sparse_po and sparse_xpo commands. 
 # sparse_poreg 0.8.4-rc14: linear PRL and XPO
 
-This independent Stata package provides `sparse_poreg` (linear post-regularization/PRL) and `sparse_xporeg` (linear cross-fit partialing-out/DML). Both have official Stata and sparse Mata backends. This ZIP contains the unchanged 22 July 2026 `0.8.4-rc14` program files plus a public-data example, anonymized logs, and comparison notes. It does **not** include research data, saved estimates, or the separate developmental Poisson command. It is not a StataCorp product.
+This independent Stata package provides `sparse_poreg` (linear post-regularization/PRL) and `sparse_xporeg` (linear cross-fit partialing-out/DML). 
 
 ## Install
 
