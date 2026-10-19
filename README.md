@@ -60,7 +60,7 @@ The supplied replication script specifies Stata 17 or later. Some models can tak
 
 ## Saved results
 
-The [ReplicateLog_Results folder](ReplicateLog_Results/) contains the supplied Stata logs and CSV estimates for the linear, Poisson, PRL, and DML analyses. GitHub displays several uploaded files under abbreviated names. The replication script shows the descriptive output names it generates when run locally.
+The [ReplicateLog_Results folder](ReplicateLog_Results/) contains the supplied Stata logs and CSV estimates for the linear, Poisson, PRL, and DML analyses. The filenames match those used by the replication script.
 
 ## Try the linear sparse package
 
