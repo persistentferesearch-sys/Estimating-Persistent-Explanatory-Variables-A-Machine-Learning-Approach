@@ -1,7 +1,7 @@
 *--------------------------------------------------------------------------------------------------
 *　STATA Code for:
 *
-* "Revisiting the Missing R\&D-Patent Relation: Challenges and Solutions for Firm Fixed Effects Models. 
+* "Estimating Persistent Explanatory Variables: A Machine Learning Approach. 
 
 * This code demonstrates four methods to address potential biases in fixed effects regressions:
 *  (1) Regression with and without firm FEs and  Within R-squared  
