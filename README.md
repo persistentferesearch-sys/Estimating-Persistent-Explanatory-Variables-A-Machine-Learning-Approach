@@ -9,7 +9,7 @@ The paper's replication code covers four approaches:
 3. The adjusted Hausman–Taylor approach
 4. Post-regularization LASSO (PRL) and double machine learning (DML)
 
-The [sparse_poreg folder](sparse_poreg/) is a separate Stata package for **linear** PRL and cross-fitted DML. Its [step-by-step guide](sparse_poreg/README.md) starts with artificial finance data and then shows the public R&D–patent example.
+The [sparse_poreg folder](sparse_poreg/) is a separate Stata package for **linear** PRL and cross-fitted DML. Its [step-by-step guide](sparse_poreg/Sparse_README.md) starts with artificial finance data and then shows the public R&D–patent example.
 
 ## Data and code
 
@@ -64,7 +64,7 @@ The [ReplicateLog_Results folder](ReplicateLog_Results/) contains the supplied S
 
 ## Try the linear sparse package
 
-You can try the package without running the full paper replication. Follow the [sparse_poreg installation guide](sparse_poreg/README.md), which includes a small artificial-data check and the public R&D–patent example. The detailed comparison with Stata's official linear commands is in [RDPatentComparison.md](sparse_poreg/RDPatentComparison.md).
+You can try the package without running the full paper replication. Follow the [sparse_poreg installation guide](sparse_poreg/Sparse_README.md), which includes a small artificial-data check and the public R&D–patent example. The detailed comparison with Stata's official linear commands is in [RDPatentComparison.md](sparse_poreg/RDPatentComparison.md).
 
 ## Software
 
